@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm add:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm config set:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(docker-compose:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm list:*)",
+      "mcp__shadcn__get_add_command_for_items",
+      "Bash(pnpm dlx shadcn@latest add:*)",
+      "Bash(pnpm build:*)",
+      "Bash(grep:*)",
+      "Bash(curl:*)",
+      "Bash(pnpm knip:*)",
+      "Bash(git init:*)",
+      "Bash(pnpm prepare)",
+      "Bash(pnpm format:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": ["shadcn"]
+}

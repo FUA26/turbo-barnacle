@@ -1,0 +1,40 @@
+{
+  "$schema": "https://raw.githubusercontent.com/webpro-nz/knip/main/schema.json",
+  "entry": ["app/**/*.{ts,tsx}", "middleware.ts", "app/api/**/*.{ts,tsx}"],
+  "project": [
+    "**/*.{ts,tsx,js,jsx}",
+    "!**/node_modules/**",
+    "!**/.next/**",
+    "!**/dist/**",
+    "!**/build/**",
+    "!**/.d.ts"
+  ],
+  "ignore": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.cache/**",
+    "**/coverage/**",
+    "**/public/**",
+    "**/*.config.{ts,js}",
+    "**/*.config.{ts,js}.snap",
+    "types/next-auth.d.ts",
+    "components/ui/**",
+    "lib/store/**",
+    "lib/auth/**",
+    "lib/validations/**"
+  ],
+  "ignoreDependencies": [
+    "@types/bcryptjs",
+    "next-themes",
+    "@tanstack/react-table",
+    "recharts",
+    "tw-animate-css",
+    "lint-staged",
+    "shadcn",
+    "@base-ui/react",
+    "tailwindcss",
+    "postcss"
+  ]
+}

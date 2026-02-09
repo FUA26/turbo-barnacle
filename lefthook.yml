@@ -1,0 +1,29 @@
+# Lefthook configuration
+# See https://github.com/evilmartians/lefthook for more information
+
+pre-commit:
+  parallel: true
+  commands:
+    prettier:
+      glob: "*.{js,jsx,ts,tsx,json,css,scss,md}"
+      run: pnpm exec prettier --write {staged_files}
+      stage_fixed: true
+
+    eslint:
+      glob: "*.{js,jsx,ts,tsx}"
+      run: pnpm exec eslint --fix {staged_files}
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  commands:
+    type-check:
+      run: pnpm tsc --noEmit
+
+    tests:
+      run: pnpm test # Uncomment when tests are available
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}

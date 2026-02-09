@@ -1,0 +1,54 @@
+{
+  "path": "cz-conventional-changelog",
+  "types": {
+    "feat": {
+      "description": "A new feature",
+      "title": "Features"
+    },
+    "fix": {
+      "description": "A bug fix",
+      "title": "Bug Fixes"
+    },
+    "docs": {
+      "description": "Documentation only changes",
+      "title": "Documentation"
+    },
+    "style": {
+      "description": "Code style changes (formatting, etc.)",
+      "title": "Styles"
+    },
+    "refactor": {
+      "description": "A code refactoring change",
+      "title": "Code Refactoring"
+    },
+    "perf": {
+      "description": "A performance improvement",
+      "title": "Performance Improvements"
+    },
+    "test": {
+      "description": "Adding or updating tests",
+      "title": "Tests"
+    },
+    "build": {
+      "description": "Build system changes",
+      "title": "Builds"
+    },
+    "ci": {
+      "description": "CI/CD changes",
+      "title": "Continuous Integration"
+    },
+    "chore": {
+      "description": "Other changes",
+      "title": "Chores"
+    },
+    "revert": {
+      "description": "Revert a previous commit",
+      "title": "Reverts"
+    }
+  },
+  "scopes": {},
+  "scopeOverrides": {},
+  "usePreparedCommit": false,
+  "allowCustomScopes": true,
+  "allowBreakingChanges": ["feat", "fix"]
+}

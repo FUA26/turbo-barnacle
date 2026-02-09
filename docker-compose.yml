@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: naiera-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: naiera
+      POSTGRES_PASSWORD: naiera_password
+      POSTGRES_DB: naiera_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
