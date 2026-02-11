@@ -1,23 +1,24 @@
 "use client";
 
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Header } from "./header";
-import { Sidebar } from "./sidebar";
+import { AppSidebar } from "./sidebar";
 
 interface DashboardLayoutProps {
   user: {
-    email: string;
+    email?: string | null;
   };
   children: React.ReactNode;
 }
 
 export function DashboardLayout({ user, children }: DashboardLayoutProps) {
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
         <Header user={user} />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
-      </div>
-    </div>
+        <main className="flex flex-1 flex-col gap-4 p-4">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

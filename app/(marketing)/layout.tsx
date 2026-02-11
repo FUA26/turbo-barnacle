@@ -1,21 +1,13 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Footer } from "@/components/landing/footer";
+import { MarketingHeader } from "@/components/marketing/marketing-header";
+import type { ReactNode } from "react";
 
-export default function MarketingLayout({ children }: { children: React.ReactNode }) {
+export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen">
-      <nav className="flex items-center justify-between border-b p-4">
-        <h1 className="text-xl font-bold">Naiera</h1>
-        <div className="flex gap-4">
-          <Button variant="ghost" asChild>
-            <Link href="/features">Features</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/login">Sign In</Link>
-          </Button>
-        </div>
-      </nav>
-      {children}
+    <div className="min-h-screen flex flex-col">
+      <MarketingHeader />
+      <div className="flex-1">{children}</div>
+      <Footer />
     </div>
   );
 }

@@ -7,9 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
+// NEW: Permission model - dynamic permissions stored in database
+model Permission {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rolePermissions RolePermission[]
+}
+
+// NEW: Junction table for Role-Permission many-to-many relationship
+model RolePermission {
+  roleId       String     @default(cuid())
+  permissionId String     @default(cuid())
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  permissions RolePermission[] // Changed from Permission[] enum to junction table
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  users User[]
 }
 
 model User {
@@ -19,12 +46,22 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
-  role          Role      @default(USER)
+  roleId        String
+  role          Role      @relation(fields: [roleId], references: [id], onDelete: Restrict)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   accounts      Account[]
   sessions      Session[]
+  permissionCache PermissionCache?
+}
+
+model PermissionCache {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  permissions String[] // Changed from Permission[] enum to String[]
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Account {

@@ -1,19 +1,28 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { BenefitsSection } from "@/components/landing/benefits-section";
+import { CTASection } from "@/components/landing/cta-section";
+import { FeaturesSection } from "@/components/landing/features-section";
+import { HeroSection } from "@/components/landing/hero-section";
+import { PricingSection } from "@/components/landing/pricing-section";
+import { SocialProofSection } from "@/components/landing/social-proof-section";
+import { TechSection } from "@/components/landing/tech-section";
+import { Separator } from "@/components/ui/separator";
 
 export default function LandingPage() {
   return (
-    <div className="container flex flex-col items-center gap-6 py-24">
-      <h1 className="text-5xl font-bold">Build Amazing Products</h1>
-      <p className="text-xl text-muted-foreground max-w-2xl text-center">
-        A production-ready boilerplate for Next.js with authentication, database, and beautiful UI
-        components.
-      </p>
-      <div className="flex gap-4">
-        <Button asChild size="lg">
-          <Link href="/login">Get Started</Link>
-        </Button>
-      </div>
-    </div>
+    <main>
+      <HeroSection />
+      <Separator />
+      <SocialProofSection />
+      <Separator />
+      <FeaturesSection />
+      <Separator />
+      <TechSection />
+      <Separator />
+      <BenefitsSection />
+      <Separator />
+      <PricingSection />
+      <Separator />
+      <CTASection />
+    </main>
   );
 }
