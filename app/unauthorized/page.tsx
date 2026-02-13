@@ -21,14 +21,14 @@ export default function UnauthorizedPage() {
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">Access Denied</h1>
           <p className="text-muted-foreground">
-            You don't have permission to access this resource.
+            You don&apos;t have permission to access this resource.
           </p>
         </div>
 
         <div className="rounded-lg border bg-card p-4 text-sm">
           <p className="font-medium">Why am I seeing this?</p>
           <p className="mt-2 text-muted-foreground">
-            Your account doesn't have the required permissions to view this page. Contact your
+            Your account doesn&apos;t have the required permissions to view this page. Contact your
             administrator if you believe this is an error.
           </p>
         </div>

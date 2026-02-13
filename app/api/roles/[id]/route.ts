@@ -93,7 +93,13 @@ export const PUT = protectApiRoute({
     }
 
     // Prepare update data
-    const updateData: any = {};
+    type RoleUpdateData = {
+      name?: string;
+      permissions?: {
+        create: Array<{ permissionId: string }>;
+      };
+    };
+    const updateData: RoleUpdateData = {};
 
     if (validatedData.name) {
       updateData.name = validatedData.name;

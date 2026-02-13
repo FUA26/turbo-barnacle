@@ -78,7 +78,7 @@ export function SocialProofSection() {
                   </div>
                   <div className="flex-1 space-y-4">
                     <CardTitle className="text-2xl md:text-3xl">
-                      "The gold standard for enterprise IAM"
+                      &ldquo;The gold standard for enterprise IAM&rdquo;
                     </CardTitle>
                     <CardDescription className="text-base md:text-lg">
                       After evaluating 12 different identity management platforms, Naiera stood out
@@ -113,7 +113,9 @@ export function SocialProofSection() {
             </Card>
 
             {/* Decorative quote mark */}
-            <div className="absolute -top-4 -right-4 text-9xl text-primary/5 font-serif">"</div>
+            <div className="absolute -top-4 -right-4 text-9xl text-primary/5 font-serif">
+              &rdquo;
+            </div>
           </div>
 
           {/* Additional Testimonials */}

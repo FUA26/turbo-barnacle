@@ -86,20 +86,20 @@ export const POST = protectApiRoute({
         },
         { status: 201 }
       );
-    } catch (error: any) {
+    } catch (error) {
       // Handle validation errors
-      if (error.name === "ZodError") {
+      if (error && typeof error === "object" && "name" in error && error.name === "ZodError") {
         return NextResponse.json(
           {
             error: "Validation Error",
-            details: error.errors,
+            details: "errors" in error ? error.errors : undefined,
           },
           { status: 400 }
         );
       }
 
       // Handle unique constraint violation
-      if (error.code === "P2002") {
+      if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
         return NextResponse.json(
           {
             error: "Conflict",
@@ -110,10 +110,11 @@ export const POST = protectApiRoute({
       }
 
       // Handle other errors
+      const message = error instanceof Error ? error.message : "Failed to create permission";
       return NextResponse.json(
         {
           error: "Server Error",
-          message: error.message || "Failed to create permission",
+          message,
         },
         { status: 500 }
       );

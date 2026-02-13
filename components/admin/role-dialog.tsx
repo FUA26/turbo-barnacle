@@ -18,6 +18,11 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { RoleForm } from "./role-form";
 
+interface Role {
+  id: string;
+  name: string;
+}
+
 interface RoleDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -28,19 +33,36 @@ interface RoleDialogProps {
 
 export function RoleDialog({ open, onOpenChange, mode, roleId, onSuccess }: RoleDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [initialData, setInitialData] = useState<{
     name?: string;
     description?: string;
     permissions?: Permission[];
+    sourceRoleId?: string;
   }>();
 
   useEffect(() => {
+    if (open && mode === "clone") {
+      fetchRoles();
+    }
     if (open && mode !== "create" && roleId) {
       fetchRole();
     } else if (mode === "create") {
       setInitialData(undefined);
     }
   }, [open, mode, roleId]);
+
+  async function fetchRoles() {
+    try {
+      const res = await fetch("/api/roles");
+      if (!res.ok) throw new Error("Failed to fetch roles");
+      const data = await res.json();
+      setRoles(data.roles || []);
+    } catch (error) {
+      console.error("Failed to fetch roles:", error);
+      toast.error("Failed to load roles");
+    }
+  }
 
   async function fetchRole() {
     try {
@@ -58,7 +80,11 @@ export function RoleDialog({ open, onOpenChange, mode, roleId, onSuccess }: Role
     }
   }
 
-  async function handleSubmit(data: any) {
+  async function handleSubmit(data: {
+    name: string;
+    description?: string;
+    permissions?: string[];
+  }) {
     setIsLoading(true);
     try {
       let url, method;
@@ -125,6 +151,7 @@ export function RoleDialog({ open, onOpenChange, mode, roleId, onSuccess }: Role
             onSubmit={handleSubmit}
             onCancel={() => onOpenChange(false)}
             isLoading={isLoading}
+            roles={roles}
           />
         ) : (
           <div className="py-8 text-center text-sm text-muted-foreground">Loading...</div>

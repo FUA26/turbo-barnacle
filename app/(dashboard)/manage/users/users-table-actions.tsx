@@ -23,6 +23,14 @@ interface User {
   createdAt: Date;
 }
 
+interface UserApiResponse {
+  id: string;
+  name: string | null;
+  email: string;
+  role: { id: string; name: string };
+  createdAt: string;
+}
+
 export function UsersTableWithActions() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +44,7 @@ export function UsersTableWithActions() {
       if (!res.ok) throw new Error("Failed to fetch users");
       const data = await res.json();
       setUsers(
-        (data.users || []).map((u: any) => ({
+        (data.users || []).map((u: UserApiResponse) => ({
           ...u,
           createdAt: new Date(u.createdAt),
         }))

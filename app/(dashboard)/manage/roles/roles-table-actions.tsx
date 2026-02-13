@@ -84,9 +84,16 @@ export function RolesTableWithActions() {
     open: false,
     roleId: "",
   });
-  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; roleId: string }>({
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    roleId: string;
+    roleName: string;
+    userCount: number;
+  }>({
     open: false,
     roleId: "",
+    roleName: "",
+    userCount: 0,
   });
 
   const fetchRoles = async () => {
@@ -133,8 +140,8 @@ export function RolesTableWithActions() {
     setCloneDialog({ open: true, roleId });
   };
 
-  const handleDelete = (roleId: string) => {
-    setDeleteDialog({ open: true, roleId });
+  const handleDelete = (roleId: string, roleName: string, userCount: number) => {
+    setDeleteDialog({ open: true, roleId, roleName, userCount });
   };
 
   if (loading) {
@@ -195,8 +202,17 @@ export function RolesTableWithActions() {
       {/* Delete Dialog */}
       <DeleteRoleConfirmDialog
         open={deleteDialog.open}
-        onOpenChange={(open) => setDeleteDialog({ open, roleId: open ? deleteDialog.roleId : "" })}
+        onOpenChange={(open) =>
+          setDeleteDialog({
+            open,
+            roleId: open ? deleteDialog.roleId : "",
+            roleName: open ? deleteDialog.roleName : "",
+            userCount: open ? deleteDialog.userCount : 0,
+          })
+        }
         roleId={deleteDialog.roleId}
+        roleName={deleteDialog.roleName}
+        userCount={deleteDialog.userCount}
         onSuccess={handleRefresh}
       />
     </div>

@@ -246,8 +246,9 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
       setDialogOpen(false);
       setEditingPermission(null);
       onRefresh();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to save permission");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to save permission";
+      toast.error(message);
     }
   };
 
@@ -269,8 +270,9 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
       setDeleteDialogOpen(false);
       setPermissionToDelete(null);
       onRefresh();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to delete permission");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to delete permission";
+      toast.error(message);
     }
   };
 

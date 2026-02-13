@@ -7,60 +7,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// NEW: Permission model - dynamic permissions stored in database
 model Permission {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  category    String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  id              String           @id @default(cuid())
+  name            String           @unique
+  category        String
+  description     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   rolePermissions RolePermission[]
 }
 
-// NEW: Junction table for Role-Permission many-to-many relationship
 model RolePermission {
   roleId       String     @default(cuid())
   permissionId String     @default(cuid())
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
   @@id([roleId, permissionId])
 }
 
 model Role {
-  id          String           @id @default(cuid())
-  name        String           @unique
-  permissions RolePermission[] // Changed from Permission[] enum to junction table
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-
-  users User[]
+  id                       String           @id @default(cuid())
+  name                     String           @unique
+  createdAt                DateTime         @default(now())
+  updatedAt                DateTime         @updatedAt
+  permissions              RolePermission[]
+  defaultForSystemSettings SystemSettings[] @relation("DefaultUserRole")
+  users                    User[]
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  roleId        String
-  role          Role      @relation(fields: [roleId], references: [id], onDelete: Restrict)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  accounts      Account[]
-  sessions      Session[]
-  permissionCache PermissionCache?
+  id                   String           @id @default(cuid())
+  name                 String?
+  email                String           @unique
+  emailVerified        DateTime?
+  image                String?
+  password             String?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  roleId               String
+  avatar               String?
+  bio                  String?
+  passwordResetToken   String?          @unique
+  passwordResetExpires DateTime?
+  accounts             Account[]
+  permissionCache      PermissionCache?
+  sessions             Session[]
+  role                 Role             @relation(fields: [roleId], references: [id])
 }
 
 model PermissionCache {
   id          String   @id @default(cuid())
   userId      String   @unique
-  permissions String[] // Changed from Permission[] enum to String[]
   updatedAt   DateTime @updatedAt
+  permissions String[]
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -70,15 +70,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -97,4 +96,19 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model SystemSettings {
+  id                           String   @id @default(cuid())
+  allowRegistration            Boolean  @default(true)
+  requireEmailVerification     Boolean  @default(true)
+  defaultUserRoleId            String
+  emailVerificationExpiryHours Int      @default(24)
+  siteName                     String   @default("Naiera")
+  siteDescription              String?
+  minPasswordLength            Int      @default(8)
+  requireStrongPassword        Boolean  @default(false)
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+  defaultUserRole              Role     @relation("DefaultUserRole", fields: [defaultUserRoleId], references: [id])
 }

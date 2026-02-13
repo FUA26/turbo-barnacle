@@ -40,6 +40,7 @@ export type Permission =
   | "ADMIN_USERS_MANAGE"
   | "ADMIN_ROLES_MANAGE"
   | "ADMIN_PERMISSIONS_MANAGE"
+  | "ADMIN_SYSTEM_SETTINGS_MANAGE"
   // Allow dynamic/custom permissions (any string)
   | string;
 

@@ -86,7 +86,7 @@ export function Shield({
       const disabledChild = React.cloneElement(childElement, {
         ...(childElement.props || {}),
         disabled: true,
-      });
+      } as React.HTMLAttributes<HTMLElement>);
 
       return (
         <TooltipProvider>
@@ -105,8 +105,8 @@ export function Shield({
       const disabledChild = React.cloneElement(childElement, {
         ...(childElement.props || {}),
         disabled: true,
-        className: `${(childElement.props as React.ReactElement["props"])?.className || ""} opacity-50 cursor-not-allowed`,
-      });
+        className: `${(childElement.props as React.HTMLAttributes<HTMLElement>)?.className || ""} opacity-50 cursor-not-allowed`,
+      } as React.HTMLAttributes<HTMLElement>);
 
       return (
         <div className="space-y-1">
@@ -121,8 +121,8 @@ export function Shield({
       return React.cloneElement(childElement, {
         ...(childElement.props || {}),
         disabled: true,
-        className: `${(childElement.props as React.ReactElement["props"])?.className || ""} opacity-50 cursor-not-allowed`,
-      });
+        className: `${(childElement.props as React.HTMLAttributes<HTMLElement>)?.className || ""} opacity-50 cursor-not-allowed`,
+      } as React.HTMLAttributes<HTMLElement>);
     }
 
     default:
@@ -147,7 +147,7 @@ export function Shield({
 export function ShieldButton({
   permissions,
   message = "You don't have permission",
-  type = "tooltip",
+  displayType = "tooltip",
   children,
   onClick,
   disabled,
@@ -155,7 +155,7 @@ export function ShieldButton({
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   permissions: Permission[];
   message?: string;
-  type?: "tooltip" | "inline" | "disabled";
+  displayType?: "tooltip" | "inline" | "disabled";
 }) {
   const { permissions: userPermissions } = usePermissionContext();
 
@@ -172,14 +172,17 @@ export function ShieldButton({
     </button>
   );
 
-  if (!hasAccess && message && type === "tooltip") {
+  if (!hasAccess && message && displayType === "tooltip") {
     return (
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            {React.cloneElement(button as React.ReactElement, {
-              disabled: true,
-            })}
+            {React.cloneElement(
+              button as React.ReactElement,
+              {
+                disabled: true,
+              } as React.HTMLAttributes<HTMLElement>
+            )}
           </TooltipTrigger>
           <TooltipContent>
             <p>{message}</p>

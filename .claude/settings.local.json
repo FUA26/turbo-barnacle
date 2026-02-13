@@ -40,7 +40,18 @@
       "Bash(lsof:*)",
       "Bash(find:*)",
       "Bash(yes:*)",
-      "Bash(head:*)"
+      "Bash(head:*)",
+      "Bash(git reset:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(psql:*)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(npx prisma db pull:*)",
+      "Bash(npx prisma db seed:*)",
+      "Bash(git remote add:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm exec eslint:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

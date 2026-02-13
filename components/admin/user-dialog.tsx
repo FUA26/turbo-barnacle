@@ -73,12 +73,7 @@ export function UserDialog({ open, onOpenChange, mode, userId, onSuccess }: User
     }
   }
 
-  async function handleSubmit(data: {
-    name: string;
-    email: string;
-    password?: string;
-    roleId: string;
-  }) {
+  async function handleSubmit(data: { name?: string; email: string; roleId: string }) {
     setIsLoading(true);
     try {
       const url = mode === "create" ? "/api/users" : `/api/users/${userId}`;

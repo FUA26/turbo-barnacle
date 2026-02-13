@@ -11,6 +11,7 @@
 import { prisma } from "@/lib/db/prisma";
 import { protectApiRoute } from "@/lib/rbac-server/api-protect";
 import { Permission } from "@/lib/rbac/types";
+import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 
 /**
@@ -116,8 +117,7 @@ export const POST = protectApiRoute({
     }
 
     // Create user
-    const bcrypt = require("bcryptjs");
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hash(password, 10);
 
     const newUser = await prisma.user.create({
       data: {

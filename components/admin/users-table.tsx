@@ -71,7 +71,7 @@ export function UsersTable() {
   if (!canReadAny) {
     return (
       <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center text-destructive">
-        You don't have permission to view users.
+        You don&apos;t have permission to view users.
       </div>
     );
   }

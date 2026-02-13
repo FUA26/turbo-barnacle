@@ -56,6 +56,7 @@ export function RolesManager() {
     if (canManageRoles) {
       // In a real app, fetch roles from API
       // For demo purposes, using mock data
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRoles([
         {
           id: "1",
@@ -75,7 +76,7 @@ export function RolesManager() {
   if (!canManageRoles) {
     return (
       <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center text-destructive">
-        You don't have permission to manage roles.
+        You don&apos;t have permission to manage roles.
       </div>
     );
   }
@@ -147,7 +148,11 @@ export function RolesManager() {
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {role.permissions.slice(0, 3).map((permission) => (
-                      <PermissionBadge key={permission} permissions={[permission as any]} compact />
+                      <PermissionBadge
+                        key={permission}
+                        permissions={[permission as Permission]}
+                        compact
+                      />
                     ))}
                     {role.permissions.length > 3 && (
                       <span className="text-xs text-muted-foreground">

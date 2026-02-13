@@ -18,6 +18,8 @@ import {
   SecurityIcon,
   Settings,
   Settings01Icon,
+  Settings02Icon,
+  UserCircleIcon,
   Users,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -46,7 +48,14 @@ const navItems = [
     icon: Settings01Icon,
     permission: "ADMIN_PERMISSIONS_MANAGE",
   },
+  {
+    href: "/manage/system-settings",
+    label: "System Settings",
+    icon: Settings02Icon,
+    permission: "ADMIN_SYSTEM_SETTINGS_MANAGE",
+  },
   { heading: "Account" },
+  { href: "/profile", label: "Profile", icon: UserCircleIcon, permission: null },
   { href: "/dashboard/settings", label: "Settings", icon: Settings, permission: null },
 ];
 
