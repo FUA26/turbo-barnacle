@@ -43,6 +43,41 @@ const envSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   GITHUB_CLIENT_ID: z.string().optional(),
   GITHUB_CLIENT_SECRET: z.string().optional(),
+
+  // MinIO Object Storage
+  MINIO_ENDPOINT: z.string().default("localhost"),
+  MINIO_PORT: z.coerce.number().default(9000),
+  MINIO_ACCESS_KEY: z.string().min(1),
+  MINIO_SECRET_KEY: z.string().min(1),
+  MINIO_USE_SSL: z
+    .enum(["true", "false"])
+    .transform((val) => val === "true")
+    .default("false"),
+  MINIO_BUCKET: z.string().default("naiera-uploads"),
+
+  // File Upload Limits
+  MAX_FILE_SIZE_MB: z.coerce.number().default(50),
+  MAX_AVATAR_SIZE_MB: z.coerce.number().default(5),
+
+  // Allowed File Types (comma-separated)
+  ALLOWED_IMAGE_TYPES: z.string().default("image/jpeg,image/png,image/webp,image/gif"),
+  ALLOWED_DOCUMENT_TYPES: z
+    .string()
+    .default(
+      "application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ),
+  ALLOWED_VIDEO_TYPES: z.string().default("video/mp4,video/webm"),
+
+  // File Cleanup
+  TEMP_FILE_RETENTION_HOURS: z.coerce.number().default(24),
+  ORPHAN_FILE_CLEANUP_DAYS: z.coerce.number().default(7),
+
+  // CDN (Optional)
+  CDN_ENABLED: z
+    .enum(["true", "false"])
+    .transform((val) => val === "true")
+    .default("false"),
+  CDN_DOMAIN: z.string().optional(),
 });
 
 // Validate and parse environment variables

@@ -4,10 +4,10 @@
  * Profile Form Component
  *
  * Form for users to update their profile information
- * Includes name, email, avatar URL, and bio fields
+ * Includes name, email, avatar upload, and bio fields
  */
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AvatarUpload } from "@/components/profile/avatar-upload";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -20,8 +20,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { updateProfileSchema, type UpdateProfileInput } from "@/lib/validations/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -31,7 +29,7 @@ interface ProfileFormProps {
     id: string;
     name?: string | null;
     email: string;
-    avatar?: string | null;
+    avatarUrl?: string | null;
     bio?: string | null;
   };
   onSuccess?: () => void;
@@ -39,22 +37,45 @@ interface ProfileFormProps {
 
 export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(initialData.avatarUrl || null);
 
   const form = useForm<UpdateProfileInput>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
       name: initialData.name || "",
       email: initialData.email,
-      avatar: initialData.avatar || "",
+      avatarId: undefined, // ← FIX: undefined, avatar ID hanya ada setelah upload baru
+      avatarUrl: initialData.avatarUrl || undefined, // ← FIX: undefined, bukan ""
       bio: initialData.bio || "",
     },
   });
 
-  const avatarValue = form.watch("avatar");
+  const handleAvatarSelect = (fileId: string, url: string) => {
+    setAvatarId(fileId);
+    setAvatarUrl(url);
+    // Update form values and mark as dirty
+    form.setValue("avatarId", fileId, { shouldDirty: true });
+    form.setValue("avatarUrl", url, { shouldDirty: true });
+    form.trigger(["avatarId", "avatarUrl"]);
+  };
+
+  const handleAvatarRemove = () => {
+    setAvatarId(null);
+    setAvatarUrl(null);
+    // Clear form values and mark as dirty
+    form.setValue("avatarId", undefined, { shouldDirty: true });
+    form.setValue("avatarUrl", undefined, { shouldDirty: true });
+    form.trigger(["avatarId", "avatarUrl"]);
+  };
 
   const onSubmit = async (data: UpdateProfileInput) => {
+    console.log("[DEBUG] Profile form submit called with data:", data);
+    console.log("[DEBUG] Form is dirty:", form.formState.isDirty);
+    console.log("[DEBUG] avatarId:", data.avatarId);
+    console.log("[DEBUG] avatarUrl:", data.avatarUrl);
     setIsLoading(true);
     try {
+      console.log("[DEBUG] Sending PUT request to:", `/api/users/${initialData.id}/profile`);
       const response = await fetch(`/api/users/${initialData.id}/profile`, {
         method: "PUT",
         headers: {
@@ -63,9 +84,12 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
         body: JSON.stringify(data),
       });
 
+      console.log("[DEBUG] Response status:", response.status);
       const result = await response.json();
+      console.log("[DEBUG] Response data:", result);
 
       if (!response.ok) {
+        console.error("[ERROR] API returned error:", result);
         throw new Error(result.message || "Failed to update profile");
       }
 
@@ -77,7 +101,7 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
       // Call onSuccess callback if provided
       onSuccess?.();
     } catch (error) {
-      console.error("Failed to update profile:", error);
+      console.error("[ERROR] Failed to update profile:", error);
       toast.error(error instanceof Error ? error.message : "Failed to update profile");
     } finally {
       setIsLoading(false);
@@ -86,21 +110,14 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      {/* Avatar Preview */}
-      <div className="flex items-center gap-4">
-        <Avatar className="h-20 w-20">
-          <AvatarImage src={avatarValue || undefined} alt={form.watch("name") || "User"} />
-          <AvatarFallback>
-            <HugeiconsIcon icon={UserIcon} className="h-10 w-10 text-muted-foreground" />
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex-1">
-          <p className="text-sm font-medium">Profile Picture</p>
-          <p className="text-xs text-muted-foreground">
-            Enter a URL for your profile picture. Recommended size: 200x200px
-          </p>
-        </div>
-      </div>
+      {/* Avatar Upload */}
+      <AvatarUpload
+        currentAvatarUrl={avatarUrl}
+        userName={form.watch("name") || undefined}
+        onAvatarSelect={handleAvatarSelect}
+        onAvatarRemove={handleAvatarRemove}
+        disabled={isLoading}
+      />
 
       {/* Name Field */}
       <Field>
@@ -134,26 +151,6 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
         <FieldDescription>Your email address for notifications and login</FieldDescription>
         <FieldError
           errors={form.formState.errors.email ? [form.formState.errors.email] : undefined}
-        />
-      </Field>
-
-      {/* Avatar URL Field */}
-      <Field>
-        <FieldLabel htmlFor="avatar">Avatar URL</FieldLabel>
-        <FieldContent>
-          <Input
-            id="avatar"
-            type="url"
-            placeholder="https://example.com/avatar.jpg"
-            {...form.register("avatar")}
-            disabled={isLoading}
-          />
-        </FieldContent>
-        <FieldDescription>
-          Link to your profile picture. Leave empty to remove your avatar.
-        </FieldDescription>
-        <FieldError
-          errors={form.formState.errors.avatar ? [form.formState.errors.avatar] : undefined}
         />
       </Field>
 

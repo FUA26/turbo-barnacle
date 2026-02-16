@@ -19,7 +19,8 @@ export const updateUserSchema = z
 export const updateProfileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100).optional(),
   email: z.string().email("Invalid email address").optional(),
-  avatar: z.string().url("Invalid URL").optional().or(z.literal("")), // Allow empty string to clear avatar
+  avatarId: z.string().optional().or(z.literal("")), // File ID from upload service, empty string to clear
+  avatarUrl: z.string().min(1).optional(), // Serve URL (can be relative path like /api/files/[id]/serve)
   bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
 });
 

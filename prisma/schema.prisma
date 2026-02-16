@@ -46,7 +46,6 @@ model User {
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
   roleId               String
-  avatar               String?
   bio                  String?
   passwordResetToken   String?          @unique
   passwordResetExpires DateTime?
@@ -54,6 +53,12 @@ model User {
   permissionCache      PermissionCache?
   sessions             Session[]
   role                 Role             @relation(fields: [roleId], references: [id])
+
+  // Avatar: Denormalized approach
+  avatarId             String?          @unique
+  avatar               File?            @relation("UserAvatar", fields: [avatarId], references: [id], onDelete: SetNull)
+  avatarUrl            String?          // Cache URL from File.cdnUrl
+  uploadedFiles        File[]
 }
 
 model PermissionCache {
@@ -111,4 +116,54 @@ model SystemSettings {
   createdAt                    DateTime @default(now())
   updatedAt                    DateTime @updatedAt
   defaultUserRole              Role     @relation("DefaultUserRole", fields: [defaultUserRoleId], references: [id])
+}
+
+model File {
+  id               String       @id @default(cuid())
+  originalFilename String
+  storedFilename   String       @unique
+  mimeType         String
+  size             Int
+  category         FileCategory @default(OTHER)
+
+  // Storage
+  bucketName       String       @default("naiera-uploads")
+  storagePath      String       // e.g., "users/123/avatar/abc123.jpg"
+  cdnUrl           String?
+
+  // Ownership
+  uploadedById     String
+  uploadedBy       User         @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  // Usage & Lifecycle
+  isPublic         Boolean      @default(false)
+  referenceCount   Int          @default(0)
+  lastAccessedAt   DateTime     @default(now())
+  expiresAt        DateTime?    // Auto-delete untuk temporary files
+  deletedAt        DateTime?    // Soft delete
+
+  // Metadata
+  width            Int?         // Untuk images
+  height           Int?
+
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  // Relations
+  avatars          User[]       @relation("UserAvatar")
+
+  @@index([uploadedById])
+  @@index([category])
+  @@index([expiresAt])
+  @@index([deletedAt])
+}
+
+enum FileCategory {
+  AVATAR
+  DOCUMENT
+  IMAGE
+  VIDEO
+  AUDIO
+  ARCHIVE
+  OTHER
 }

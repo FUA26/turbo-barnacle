@@ -138,7 +138,10 @@ export const PUT = protectApiRoute({
       data: {
         ...(validatedData.name !== undefined && { name: validatedData.name }),
         ...(validatedData.email !== undefined && { email: validatedData.email }),
-        ...(validatedData.avatar !== undefined && { avatar: validatedData.avatar || null }),
+        ...(validatedData.avatarId !== undefined && {
+          avatarId: validatedData.avatarId || null,
+          avatarUrl: validatedData.avatarUrl || null,
+        }),
         ...(validatedData.bio !== undefined && { bio: validatedData.bio }),
       },
       select: {
