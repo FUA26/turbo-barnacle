@@ -72,7 +72,7 @@ export function ProfileClient({ user }: ProfileClientProps) {
               <SimpleAvatarUpload
                 currentAvatarUrl={user.avatarUrl ?? undefined}
                 userName={user.name}
-                onAvatarSelect={(fileId, url, file) => {
+                onAvatarSelect={(fileId, url, _file) => {
                   console.log("[DEBUG] Avatar uploaded:", { fileId, url });
                   handleProfileUpdateSuccess();
                 }}
