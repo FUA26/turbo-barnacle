@@ -49,58 +49,61 @@ export function ProfileClient({ user }: ProfileClientProps) {
       </div>
 
       {/* Tabs for Profile and Password */}
-      <Tabs defaultValue="profile" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
-          <TabsTrigger value="profile" className="gap-2">
-            <HugeiconsIcon icon={UserCircleIcon} className="h-4 w-4" />
-            Profile
-          </TabsTrigger>
-          <TabsTrigger value="password" className="gap-2">
-            <HugeiconsIcon icon={LockPasswordIcon} className="h-4 w-4" />
-            Password
-          </TabsTrigger>
-        </TabsList>
+      {/* suppressHydrationWarning: Radix UI generates random IDs for accessibility, causing hydration mismatch */}
+      <div suppressHydrationWarning>
+        <Tabs defaultValue="profile" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
+            <TabsTrigger value="profile" className="gap-2">
+              <HugeiconsIcon icon={UserCircleIcon} className="h-4 w-4" />
+              Profile
+            </TabsTrigger>
+            <TabsTrigger value="password" className="gap-2">
+              <HugeiconsIcon icon={LockPasswordIcon} className="h-4 w-4" />
+              Password
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Profile Tab */}
-        <TabsContent value="profile">
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile Information</CardTitle>
-              <CardDescription>
-                Update your profile information and manage your account
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ProfileForm
-                initialData={{
-                  id: user.id,
-                  name: user.name,
-                  email: user.email,
-                  avatarUrl: user.avatarUrl,
-                  bio: user.bio,
-                }}
-                onSuccess={handleProfileUpdateSuccess}
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
+          {/* Profile Tab */}
+          <TabsContent value="profile">
+            <Card>
+              <CardHeader>
+                <CardTitle>Profile Information</CardTitle>
+                <CardDescription>
+                  Update your profile information and manage your account
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ProfileForm
+                  initialData={{
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    avatarUrl: user.avatarUrl,
+                    bio: user.bio,
+                  }}
+                  onSuccess={handleProfileUpdateSuccess}
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-        {/* Password Tab */}
-        <TabsContent value="password">
-          <Card>
-            <CardHeader>
-              <CardTitle>Change Password</CardTitle>
-              <CardDescription>
-                Update your password to keep your account secure. Make sure to use a strong
-                password.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ChangePasswordForm userId={user.id} />
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          {/* Password Tab */}
+          <TabsContent value="password">
+            <Card>
+              <CardHeader>
+                <CardTitle>Change Password</CardTitle>
+                <CardDescription>
+                  Update your password to keep your account secure. Make sure to use a strong
+                  password.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChangePasswordForm userId={user.id} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
 
       {/* Account Info Card */}
       <Card>
