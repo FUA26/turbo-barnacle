@@ -111,20 +111,6 @@ export function RoleDialog({ open, onOpenChange, mode, roleId, onSuccess }: Role
         throw new Error(error.message || "Failed to save role");
       }
 
-      toast.success(mode === "create" ? "Role created successfully" : "Role updated successfully");
-      onSuccess?.();
-      onOpenChange(false);
-    } catch (error) {
-      console.error("Failed to save role:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to save role");
-    } finally {
-      setIsLoading(false);
-    }
-  }
-        const error = await res.json();
-        throw new Error(error.message || "Failed to save role");
-      }
-
       const successMessage =
         mode === "clone"
           ? "Role cloned successfully"
