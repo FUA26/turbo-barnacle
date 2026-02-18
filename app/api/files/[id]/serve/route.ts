@@ -20,9 +20,9 @@ import { NextResponse } from "next/server";
  */
 export const GET = protectApiRoute({
   permissions: ["FILE_READ_OWN"] as Permission[],
-  handler: async (req, { user }, { params }: { params: { id: string } }) => {
+  handler: async (req, { user }, { params }: { params: Promise<{ id: string }> }) => {
     try {
-      const fileId = params.id;
+      const { id: fileId } = await params;
 
       // Get file record with permission check
       const file = await getFileById(fileId, user.id);
