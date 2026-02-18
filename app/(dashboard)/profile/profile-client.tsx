@@ -7,8 +7,8 @@
  * Uses tabs to separate profile editing from password changing
  */
 
+import { SimpleAvatarUpload } from "@/components/profile/avatar-upload-simple";
 import { ChangePasswordForm } from "@/components/profile/change-password-form";
-import { ProfileForm } from "@/components/profile/profile-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LockPasswordIcon, UserCircleIcon } from "@hugeicons/core-free-icons";
@@ -20,7 +20,6 @@ interface ProfileClientProps {
     id: string;
     name?: string | null;
     email: string;
-    avatar?: string | null;
     bio?: string | null;
     role: {
       id: string;
@@ -28,6 +27,8 @@ interface ProfileClientProps {
     };
     createdAt: Date;
     updatedAt: Date;
+    avatarId: string | null; // NEW
+    avatarUrl: string | null; // NEW (proxy URL)
   };
 }
 
@@ -64,13 +65,22 @@ export function ProfileClient({ user }: ProfileClientProps) {
         <TabsContent value="profile">
           <Card>
             <CardHeader>
-              <CardTitle>Profile Information</CardTitle>
-              <CardDescription>
-                Update your profile information. This information will be displayed publicly.
-              </CardDescription>
+              <CardTitle>Profile Picture</CardTitle>
+              <CardDescription>Upload a photo to personalize your profile</CardDescription>
             </CardHeader>
             <CardContent>
-              <ProfileForm initialData={user} onSuccess={handleProfileUpdateSuccess} />
+              <SimpleAvatarUpload
+                currentAvatarUrl={user.avatarUrl ?? undefined}
+                userName={user.name}
+                onAvatarSelect={(fileId, url, file) => {
+                  console.log("[DEBUG] Avatar uploaded:", { fileId, url });
+                  handleProfileUpdateSuccess();
+                }}
+                onAvatarRemove={() => {
+                  console.log("[DEBUG] Avatar removed");
+                  handleProfileUpdateSuccess();
+                }}
+              />
             </CardContent>
           </Card>
         </TabsContent>
