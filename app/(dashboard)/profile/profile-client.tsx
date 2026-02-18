@@ -40,10 +40,10 @@ export function ProfileClient({ user }: ProfileClientProps) {
     router.refresh();
   };
 
+  // _file parameter is required by SimpleAvatarUpload interface but not used
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleAvatarSelect = async (fileId: string, url: string, _file: File) => {
     try {
-      console.log("[DEBUG] Updating profile with avatar:", { fileId, url });
-
       const response = await fetch(`/api/users/${user.id}/profile`, {
         method: "PUT",
         headers: {
@@ -62,7 +62,6 @@ export function ProfileClient({ user }: ProfileClientProps) {
         return;
       }
 
-      console.log("[DEBUG] Avatar updated successfully");
       handleProfileUpdateSuccess();
     } catch (error) {
       console.error("Error updating avatar:", error);
@@ -72,8 +71,6 @@ export function ProfileClient({ user }: ProfileClientProps) {
 
   const handleAvatarRemove = async () => {
     try {
-      console.log("[DEBUG] Removing avatar");
-
       const response = await fetch(`/api/users/${user.id}/profile`, {
         method: "PUT",
         headers: {
@@ -92,7 +89,6 @@ export function ProfileClient({ user }: ProfileClientProps) {
         return;
       }
 
-      console.log("[DEBUG] Avatar removed successfully");
       handleProfileUpdateSuccess();
     } catch (error) {
       console.error("Error removing avatar:", error);

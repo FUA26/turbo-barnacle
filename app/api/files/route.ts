@@ -55,9 +55,6 @@ export const POST = protectApiRoute({
         expiresAt,
       });
 
-      console.log("[DEBUG] Upload result serveUrl:", result.serveUrl);
-      console.log("[DEBUG] Upload result cdnUrl:", result.cdnUrl);
-
       return NextResponse.json({ file: result }, { status: 201 });
     } catch (error: unknown) {
       console.error("Error uploading file:", error);
