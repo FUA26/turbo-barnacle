@@ -92,7 +92,9 @@ export function RoleForm({
           </FieldContent>
           <FieldError
             errors={
-              form.formState.errors.sourceRoleId ? [form.formState.errors.sourceRoleId] : undefined
+              "sourceRoleId" in form.formState.errors && form.formState.errors.sourceRoleId
+                ? [form.formState.errors.sourceRoleId]
+                : undefined
             }
           />
         </Field>

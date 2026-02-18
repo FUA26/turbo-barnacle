@@ -115,8 +115,6 @@ export async function uploadFile(options: UploadFileOptions): Promise<UploadResu
       uploadedById: userId,
       isPublic,
       expiresAt,
-      width: detectedType?.width,
-      height: detectedType?.height,
     },
   });
 

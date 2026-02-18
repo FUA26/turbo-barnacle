@@ -132,18 +132,14 @@ export function AvatarUpload({
               category="AVATAR"
               maxSize={AVATAR_MAX_SIZE}
               accept={AVATAR_ACCEPT}
-              onUploadComplete={(result) => {
-                console.log("[DEBUG] Upload successful:", result);
-                console.log("[DEBUG] Avatar uploaded:", {
-                  fileId: result.file.id,
-                  url: result.file.serveUrl,
-                });
-                handleUploadComplete(result.file.id, result.file.serveUrl);
+              onUploadComplete={(fileId, url, _file) => {
+                console.log("[DEBUG] Upload successful:", { fileId, url });
+                handleUploadComplete(fileId, url);
               }}
               onUploadError={(error) => {
                 console.error("[DEBUG] Upload failed:", error);
                 setIsUploading(false);
-                toast.error(error.message || "Failed to upload avatar");
+                toast.error(error instanceof Error ? error.message : "Failed to upload avatar");
               }}
               maxSizeMB={5}
               className="w-full"

@@ -20,9 +20,10 @@ import { NextResponse } from "next/server";
  */
 export const GET = protectApiRoute({
   permissions: ["FILE_READ_OWN"] as Permission[],
-  handler: async (req, { user }, { params }: { params: Promise<{ id: string }> }) => {
+  handler: async (req, { user }, ...args) => {
     try {
-      const { id: fileId } = await params;
+      const paramsData = args[0] as { params: Promise<{ id: string }> };
+      const { id: fileId } = await paramsData.params;
 
       // Get file record with permission check
       const file = await getFileById(fileId, user.id);
@@ -54,7 +55,7 @@ export const GET = protectApiRoute({
       }
 
       // Return file content with proper headers
-      return new NextResponse(bytes, {
+      return new NextResponse(Buffer.from(bytes), {
         headers: {
           "Content-Type": file.mimeType,
           "Content-Disposition": `inline; filename="${file.originalFilename}"`,

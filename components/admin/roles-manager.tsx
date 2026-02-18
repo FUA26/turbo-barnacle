@@ -30,6 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useCan, useIsAdmin, usePermissionsInCategory } from "@/lib/rbac-client/hooks";
+import { Permission } from "@/lib/rbac/types";
 import { AddCircleIcon, Delete01Icon, Edit01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect, useState } from "react";

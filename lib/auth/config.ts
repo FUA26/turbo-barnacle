@@ -46,23 +46,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!isValid) return null;
 
-        // Extract permission names from junction table
-        const permissions = user.role?.permissions.map((rp) => rp.permission.name) as Permission[];
-
         return {
           id: user.id,
           email: user.email,
           name: user.name,
-          roleId: user.roleId,
-          roleName: user.role?.name,
-          permissions,
-        } as {
-          id: string;
-          email: string;
-          name: string | null;
-          roleId: string;
-          roleName: string | undefined;
-          permissions: Permission[];
+          role: user.role
+            ? {
+                id: user.role.id,
+                name: user.role.name,
+                permissions: user.role.permissions.map((rp) => ({
+                  permission: {
+                    name: rp.permission.name,
+                  },
+                })),
+              }
+            : undefined,
         };
       },
     }),
@@ -71,17 +69,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.roleId = user.roleId;
-        token.roleName = user.roleName;
-        token.permissions = user.permissions;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id as string;
-      session.user.roleId = token.roleId as string;
-      session.user.roleName = token.roleName as string | undefined;
-      session.user.permissions = token.permissions as Permission[] | undefined;
+      if (token.role) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as {
+          id: string;
+          name: string;
+          permissions: Array<{
+            permission: {
+              name: string;
+            };
+          }>;
+        };
+      }
       return session;
     },
   },

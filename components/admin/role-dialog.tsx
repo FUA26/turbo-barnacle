@@ -84,6 +84,7 @@ export function RoleDialog({ open, onOpenChange, mode, roleId, onSuccess }: Role
     name: string;
     description?: string;
     permissions?: string[];
+    sourceRoleId?: string;
   }) {
     setIsLoading(true);
     try {

@@ -2,6 +2,7 @@ import { Providers } from "@/components/shared/providers";
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const notoSans = Noto_Sans({ variable: "--font-sans" });
@@ -31,6 +32,12 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>{children}</Providers>
         <Toaster />
+        <Script src="https://cdn.jsdelivr.net/npm/eruda" strategy="afterInteractive" />
+        <Script id="eruda-init" strategy="afterInteractive">
+          {`if (window.eruda) {
+            window.eruda.init();
+          }`}
+        </Script>
       </body>
     </html>
   );

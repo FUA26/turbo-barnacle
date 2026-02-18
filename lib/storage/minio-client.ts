@@ -47,7 +47,17 @@ export async function ensureBucket(): Promise<void> {
     );
   } catch (error: unknown) {
     // Bucket doesn't exist (404), create it
-    if (error.name === "NotFound" || error.$metadata?.httpStatusCode === 404) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "name" in error &&
+      (error.name === "NotFound" ||
+        ("$metadata" in error &&
+          typeof error.$metadata === "object" &&
+          error.$metadata &&
+          "httpStatusCode" in error.$metadata &&
+          error.$metadata.httpStatusCode === 404))
+    ) {
       await s3.send(
         new CreateBucketCommand({
           Bucket: env.MINIO_BUCKET,

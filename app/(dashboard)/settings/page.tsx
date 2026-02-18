@@ -25,7 +25,11 @@ export default async function SettingsPage() {
       id: true,
       name: true,
       email: true,
-      avatar: true,
+      avatar: {
+        select: {
+          cdnUrl: true,
+        },
+      },
       role: {
         select: {
           name: true,
@@ -38,5 +42,11 @@ export default async function SettingsPage() {
     redirect("/login");
   }
 
-  return <SettingsClient user={user} />;
+  // Transform avatar object to string URL
+  const transformedUser = {
+    ...user,
+    avatar: user.avatar?.cdnUrl ?? null,
+  };
+
+  return <SettingsClient user={transformedUser} />;
 }
