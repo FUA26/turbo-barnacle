@@ -136,7 +136,6 @@ export function AvatarUpload({
                 console.log("[DEBUG] Upload successful:", { fileId, url });
                 handleUploadComplete(fileId, url);
               }}
-              maxSizeMB={5}
               className="w-full"
             />
           </div>
