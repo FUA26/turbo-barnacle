@@ -317,6 +317,214 @@ export async function POST(req: Request) {
 
 ---
 
+## Issue #2: Unauthorized Redirect After Logout (Middleware)
+
+**Date**: 2026-02-18
+**Severity**: Medium - Broken user flow
+**Symptom**: After clicking logout, user is redirected to `/unauthorized` page instead of staying on `/login` or being redirected appropriately.
+
+### Root Cause Analysis
+
+#### Problem: Middleware Using Deprecated Session Structure
+
+**What**: Middleware was checking for `req.auth?.user?.roleName` which no longer exists after auth config refactor.
+
+**Why**:
+
+After refactoring auth config to include permissions, session structure changed from:
+
+```typescript
+// Old structure
+{
+  user: {
+    id: string,
+    email: string,
+    roleName: string, // ❌ Removed
+  }
+}
+```
+
+To new structure:
+
+```typescript
+// New structure
+{
+  user: {
+    id: string,
+    email: string,
+    roleId: string,
+    role: {
+      id: string,
+      name: string, // ✅ Now nested
+      permissions: [...]
+    },
+    permissions: string[]
+  }
+}
+```
+
+Middleware code was not updated to reflect this change.
+
+**Evidence**:
+
+```typescript
+// middleware.ts (line 34) - OLD CODE
+const userRole = req.auth?.user?.roleName; // ❌ Undefined after auth refactor
+
+// This caused:
+// 1. userRole = undefined
+// 2. Check (userRole !== "ADMIN") = true
+// 3. Redirect to /unauthorized
+```
+
+**Solution**:
+Update middleware to use new session structure and add null checks:
+
+```typescript
+// ✅ CORRECT
+const userRole = req.auth?.user?.role?.name;
+
+if (!userRole || userRole !== "ADMIN") {
+  return NextResponse.redirect(new URL("/unauthorized", req.url));
+}
+
+// Also add /unauthorized to isOnAuthPage to prevent redirect loop
+const isOnAuthPage =
+  pathname.startsWith("/login") ||
+  pathname.startsWith("/register") ||
+  pathname.startsWith("/unauthorized"); // ✅ Add this
+```
+
+**Prevention**:
+
+- Always update middleware when changing session structure
+- Add comprehensive TypeScript types for session
+- Test auth flows (login, logout, protected routes) after auth changes
+
+---
+
+### Impact & Symptoms
+
+#### User Impact:
+
+1. **Confusing logout flow** - User clicks logout, expects to see login page but sees "Unauthorized" instead
+2. **Redirect loop** - In some cases, user gets stuck in redirect loop between pages
+3. **Loss of trust** - Makes the application feel broken
+
+#### Error Messages:
+
+```
+No visible error in console (redirect happens at middleware level)
+User sees: /unauthorized page with message "You don't have permission to access this page"
+Expected: Stay on /login page after logout
+```
+
+---
+
+### Resolution Steps
+
+1. **Update middleware** (already done):
+   - Change `req.auth?.user?.roleName` to `req.auth?.user?.role?.name`
+   - Add `/unauthorized` to `isOnAuthPage` check
+   - Add null check: `if (!userRole || userRole !== "ADMIN")`
+
+2. **Clear browser cache**:
+   - Open DevTools → Application → Clear Storage
+   - Or hard refresh: Ctrl+Shift+R
+
+3. **Test logout flow**:
+   - Login as admin
+   - Click logout
+   - Should redirect to `/login` (not `/unauthorized`)
+
+---
+
+### Prevention Strategies
+
+#### 1. Type-Safe Middleware Helper
+
+Create helper function to safely extract role:
+
+```typescript
+function getUserRole(session: Session | null): string | null {
+  return session?.user?.role?.name || null;
+}
+
+// Usage
+const userRole = getUserRole(req.auth);
+if (userRole !== "ADMIN") {
+  return NextResponse.redirect(new URL("/unauthorized", req.url));
+}
+```
+
+#### 2. Comprehensive Auth Testing
+
+Test checklist for auth changes:
+
+- [ ] Login flow works
+- [ ] Logout redirects correctly
+- [ ] Protected routes redirect to login (when not authenticated)
+- [ ] Protected routes accessible (when authenticated with correct role)
+- [ ] Role-based routes work (e.g., /manage requires ADMIN)
+- [ ] Session refresh doesn't break auth
+- [ ] Browser back button doesn't create auth loops
+
+#### 3. Session Structure Documentation
+
+Keep documentation in sync with actual session structure:
+
+```typescript
+// docs/auth-session-structure.md
+/**
+ * Session Object Structure
+ *
+ * @example
+ * {
+ *   user: {
+ *     id: string,
+ *     email: string,
+ *     name: string | null,
+ *     roleId: string,
+ *     role: {
+ *       id: string,
+ *       name: string,
+ *       permissions: [{ permission: { name: string } }]
+ *     },
+ *     permissions: string[] // Flat array for convenience
+ *   }
+ * }
+ */
+```
+
+---
+
+### Related Files
+
+**Middleware**:
+
+- `middleware.ts` - Route protection logic
+
+**Auth Config**:
+
+- `lib/auth/config.ts` - Session structure definition
+- `types/next-auth.d.ts` - TypeScript types
+
+**Testing**:
+
+- Test with: Login → Dashboard → Logout → Verify on /login (not /unauthorized)
+
+---
+
+### Key Takeaways
+
+1. **Middleware depends on session structure** - Any change to auth/session requires middleware update
+2. **Nested object access needs null checks** - Always check for intermediate properties: `req.auth?.user?.role?.name`
+3. **Test logout flow** - Logout is often overlooked in testing but critical for UX
+4. **Redirect loops are tricky** - Always check if destination page has its own redirects
+5. **Keep types in sync** - TypeScript types must match runtime session structure exactly
+
+---
+
 ## Template for Future Issues
 
 ```markdown
