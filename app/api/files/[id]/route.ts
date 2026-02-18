@@ -61,11 +61,14 @@ export const DELETE = protectApiRoute({
     } catch (error: unknown) {
       console.error("Error deleting file:", error);
 
-      if (error.message === "File not found or access denied") {
+      if (error instanceof Error && error.message === "File not found or access denied") {
         return NextResponse.json({ error: error.message }, { status: 404 });
       }
 
-      if (error.message === "You don't have permission to delete this file") {
+      if (
+        error instanceof Error &&
+        error.message === "You don't have permission to delete this file"
+      ) {
         return NextResponse.json({ error: error.message }, { status: 403 });
       }
 
