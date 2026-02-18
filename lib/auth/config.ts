@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/db/prisma";
-import { Permission } from "@/lib/rbac/types";
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -76,9 +75,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      if (token.role) {
+      if (token.id) {
         session.user.id = token.id as string;
         session.user.roleId = token.roleId as string;
+      }
+      if (token.role) {
         session.user.role = token.role as {
           id: string;
           name: string;
