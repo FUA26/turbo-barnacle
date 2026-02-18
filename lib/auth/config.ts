@@ -71,6 +71,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id;
         token.roleId = user.roleId;
         token.role = user.role;
+        // Extract permissions as flat array for easier access
+        if (user.role) {
+          token.permissions = user.role.permissions.map((rp) => rp.permission.name);
+        }
       }
       return token;
     },
@@ -89,6 +93,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             };
           }>;
         };
+      }
+      if (token.permissions) {
+        session.user.permissions = token.permissions as string[];
       }
       return session;
     },
