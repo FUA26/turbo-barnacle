@@ -136,11 +136,6 @@ export function AvatarUpload({
                 console.log("[DEBUG] Upload successful:", { fileId, url });
                 handleUploadComplete(fileId, url);
               }}
-              onUploadError={(error) => {
-                console.error("[DEBUG] Upload failed:", error);
-                setIsUploading(false);
-                toast.error(error instanceof Error ? error.message : "Failed to upload avatar");
-              }}
               maxSizeMB={5}
               className="w-full"
             />

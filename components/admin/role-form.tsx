@@ -132,7 +132,9 @@ export function RoleForm({
           </FieldContent>
           <FieldError
             errors={
-              form.formState.errors.description ? [form.formState.errors.description] : undefined
+              "description" in form.formState.errors && form.formState.errors.description
+                ? [form.formState.errors.description]
+                : undefined
             }
           />
         </Field>
@@ -151,7 +153,9 @@ export function RoleForm({
           </FieldContent>
           <FieldError
             errors={
-              form.formState.errors.permissions ? [form.formState.errors.permissions] : undefined
+              "permissions" in form.formState.errors && form.formState.errors.permissions
+                ? [form.formState.errors.permissions]
+                : undefined
             }
           />
         </Field>

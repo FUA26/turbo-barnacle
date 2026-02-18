@@ -80,12 +80,11 @@ export function RoleDialog({ open, onOpenChange, mode, roleId, onSuccess }: Role
     }
   }
 
-  async function handleSubmit(data: {
-    name: string;
-    description?: string;
-    permissions?: string[];
-    sourceRoleId?: string;
-  }) {
+  async function handleSubmit(data:
+    | { name: string; description?: string; permissions?: string[] }
+    | { name?: string; description?: string; permissions?: string[] }
+    | { name: string; sourceRoleId: string }
+  ) {
     setIsLoading(true);
     try {
       let url, method;
@@ -108,6 +107,20 @@ export function RoleDialog({ open, onOpenChange, mode, roleId, onSuccess }: Role
       });
 
       if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Failed to save role");
+      }
+
+      toast.success(mode === "create" ? "Role created successfully" : "Role updated successfully");
+      onSuccess?.();
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Failed to save role:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to save role");
+    } finally {
+      setIsLoading(false);
+    }
+  }
         const error = await res.json();
         throw new Error(error.message || "Failed to save role");
       }

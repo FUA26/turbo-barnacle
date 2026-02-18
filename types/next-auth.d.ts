@@ -1,10 +1,11 @@
-import { Permission } from "@/lib/rbac/types";
 import { DefaultSession } from "next-auth";
+import { Permission } from "@/lib/rbac/types";
 
 declare module "next-auth" {
   interface Session {
     user: {
       id: string;
+      roleId: string;
       permissions?: Permission[];
     } & DefaultSession["user"];
   }
@@ -13,6 +14,7 @@ declare module "next-auth" {
     id: string;
     email: string;
     name: string | null;
+    roleId: string;
     role?: {
       id: string;
       name: string;
@@ -28,6 +30,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     id: string;
+    roleId: string;
     role?: {
       id: string;
       name: string;
