@@ -40,6 +40,66 @@ export function ProfileClient({ user }: ProfileClientProps) {
     router.refresh();
   };
 
+  const handleAvatarSelect = async (fileId: string, url: string, _file: File) => {
+    try {
+      console.log("[DEBUG] Updating profile with avatar:", { fileId, url });
+
+      const response = await fetch(`/api/users/${user.id}/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          avatarId: fileId,
+          avatarUrl: url, // Proxy URL
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Failed to update avatar:", error);
+        // TODO: Show toast notification to user
+        return;
+      }
+
+      console.log("[DEBUG] Avatar updated successfully");
+      handleProfileUpdateSuccess();
+    } catch (error) {
+      console.error("Error updating avatar:", error);
+      // TODO: Show toast notification to user
+    }
+  };
+
+  const handleAvatarRemove = async () => {
+    try {
+      console.log("[DEBUG] Removing avatar");
+
+      const response = await fetch(`/api/users/${user.id}/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          avatarId: "",
+          avatarUrl: "",
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Failed to remove avatar:", error);
+        // TODO: Show toast notification to user
+        return;
+      }
+
+      console.log("[DEBUG] Avatar removed successfully");
+      handleProfileUpdateSuccess();
+    } catch (error) {
+      console.error("Error removing avatar:", error);
+      // TODO: Show toast notification to user
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -72,14 +132,8 @@ export function ProfileClient({ user }: ProfileClientProps) {
               <SimpleAvatarUpload
                 currentAvatarUrl={user.avatarUrl ?? undefined}
                 userName={user.name}
-                onAvatarSelect={(fileId, url, _file) => {
-                  console.log("[DEBUG] Avatar uploaded:", { fileId, url });
-                  handleProfileUpdateSuccess();
-                }}
-                onAvatarRemove={() => {
-                  console.log("[DEBUG] Avatar removed");
-                  handleProfileUpdateSuccess();
-                }}
+                onAvatarSelect={handleAvatarSelect}
+                onAvatarRemove={handleAvatarRemove}
               />
             </CardContent>
           </Card>
