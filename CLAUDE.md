@@ -71,3 +71,89 @@ The project is configured with the shadcn MCP server. Use the shadcn tools to:
 - React: 19.2.3
 - TypeScript: 5
 - Tailwind CSS: 4.0
+
+## RBAC System (Role-Based Access Control)
+
+Permission-based authorization system:
+
+- Database models: `Permission`, `Role`, `RolePermission`, `PermissionCache`
+- Seed scripts: `prisma/seed-permissions.ts`, `prisma/seed-roles.ts`
+- API protection: `protectApiRoute({ permissions: [...], handler: ... })` from `@/lib/rbac-server/api-protect`
+- Permission format: `RESOURCE_ACTION_SCOPE` (e.g., `FILE_UPLOAD_OWN`, `USER_READ_ANY`)
+- In-memory permission cache (5-min TTL) - invalidate with `invalidateUserPermissions(userId)` or restart dev server after role changes
+- Run seeds: `pnpm tsx prisma/seed-permissions.ts && pnpm tsx prisma/seed-roles.ts`
+
+## File Upload System
+
+MinIO-based object storage with Next.js proxy:
+
+- Upload API: `POST /api/files` - requires `FILE_UPLOAD_OWN` permission
+- File serving: `GET /api/files/[id]/serve` - **USE THIS URL in clients!**
+- DO NOT use direct MinIO URLs (`cdnUrl` field) - see TECH_DEBT.md
+- File validation: magic bytes checking in `@/lib/storage/file-validator.ts`
+- Components: `@/components/file-upload/FileUpload`, `@/components/profile/AvatarUpload`
+- Cleanup admin API: `POST /api/files/admin/cleanup` - requires `FILE_MANAGE_ORPHANS` permission
+
+**See Also**: `TECH_DEBT.md` for cdnUrl field documentation
+
+### File Serving Best Practices
+
+**IMPORTANT**: Always use proxy API for front-end file access
+
+- ✅ **DO**: Use `getFileServeUrl(fileId)` from `@/lib/files/file-url`
+- ✅ **DO**: Access files via `/api/files/[id]/serve`
+- ❌ **DON'T**: Use direct MinIO URLs (`cdnUrl` field)
+- ❌ **DON'T**: Construct file URLs manually
+
+**Example**:
+
+```typescript
+import { getFileServeUrl } from "@/lib/files/file-url";
+
+// In Server Component
+const fileId = user.avatar?.id;
+const avatarUrl = fileId ? getFileServeUrl(fileId) : null;
+
+// In Client Component
+<img src={avatarUrl} alt="Avatar" />
+```
+
+**Why**: Direct MinIO URLs cause connection timeouts from browser. Proxy API provides:
+
+- RBAC permission checks
+- Server-side file access (no network issues)
+- Future flexibility for CDN integration
+
+## Development Environment
+
+### MinIO (Object Storage)
+
+- Docker service: see `docker-compose.yml` for configuration
+- Default: `minioadmin:minioadmin`, port 9000 (API), 9001 (console)
+- Bucket: `naiera-uploads`
+
+### Troubleshooting Caching Issues
+
+- Browser cache: Hard refresh `Ctrl+Shift+R` or clear DevTools → Application → Clear storage
+- Next.js cache: Delete `.next` directory and restart dev server
+- Permission cache: Restart dev server after role/permission changes
+- Always check Network tab in DevTools to verify actual API responses
+
+## Code Quality Standards
+
+This project uses lefthook for Git hooks:
+
+- Pre-commit: prettier + eslint (must pass to commit)
+- Pre-push: TypeScript type-check (must pass to push)
+- Type safety: Use `unknown` instead of `any`, with type guards like `error instanceof Error`
+- Unused variables: prefix with `_` (e.g., `_req`) or remove
+- Bypass hooks (not recommended): `git commit --no-verify` or `git push --no-verify`
+
+## Environment Configuration
+
+Required environment variables (see `.env.example`):
+
+- Database: `DATABASE_URL`, `DIRECT_URL`
+- MinIO: `MINIO_ENDPOINT`, `MINIO_PORT`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_BUCKET`
+- NextAuth: `NEXTAUTH_SECRET`, `NEXTAUTH_URL`
+- App: `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_APP_NAME`
