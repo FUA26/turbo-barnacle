@@ -4,6 +4,27 @@ This document tracks issues we encountered during development and their solution
 
 ---
 
+## Quick Index / Issue Map
+
+| #   | Title                                                | Severity | Component  | Status   | Keywords                                                            |
+| --- | ---------------------------------------------------- | -------- | ---------- | -------- | ------------------------------------------------------------------- |
+| 1   | [Permission Not Loading in Session (RBAC)](#issue-1) | High     | Auth, RBAC | ✅ Fixed | `session`, `permissions`, `RBAC`, `cache`, `admin access`           |
+| 2   | [Unauthorized Redirect After Logout](#issue-2)       | Medium   | Middleware | ✅ Fixed | `middleware`, `logout`, `redirect`, `roleName`, `session structure` |
+
+**Legend**:
+
+- **Severity**: High (blocks core features), Medium (impacts UX), Low (cosmetic)
+- **Status**: ✅ Fixed, 🔄 In Progress, ❌ Unresolved, 📝 Documented Only
+- **Keywords**: Use these terms to search for related issues
+
+---
+
+## Detailed Issues
+
+---
+
+<a id="issue-1"></a>
+
 ## Issue #1: Permission Not Loading in Session (RBAC)
 
 **Date**: 2026-02-18
@@ -308,14 +329,25 @@ export async function POST(req: Request) {
 
 ---
 
+[↑ Back to Index](#quick-index--issue-map)
+
 ### References
 
 - NextAuth.js Session Callbacks: https://next-auth.js.org/configuration/callbacks#session-callback
+- RBAC Implementation: `CLAUDE.md` - RBAC System section
+- Permission Cache: `TECH_DEBT.md` - Technical debt notes
+
+---
+
+[↑ Back to Index](#quick-index--issue-map)
+
 - JWT Callbacks: https://next-auth.js.org/configuration/callbacks#jwt-callback
 - RBAC Implementation: `CLAUDE.md` - RBAC System section
 - Permission Cache: `TECH_DEBT.md` - Technical debt notes
 
 ---
+
+<a id="issue-2"></a>
 
 ## Issue #2: Unauthorized Redirect After Logout (Middleware)
 
@@ -522,6 +554,10 @@ Keep documentation in sync with actual session structure:
 3. **Test logout flow** - Logout is often overlooked in testing but critical for UX
 4. **Redirect loops are tricky** - Always check if destination page has its own redirects
 5. **Keep types in sync** - TypeScript types must match runtime session structure exactly
+
+---
+
+[↑ Back to Index](#quick-index--issue-map)
 
 ---
 
