@@ -7,7 +7,7 @@
  * Includes name, email, avatar upload, and bio fields
  */
 
-import { AvatarUpload } from "@/components/profile/avatar-upload";
+import { SimpleAvatarUpload } from "@/components/profile/avatar-upload-simple";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -37,6 +37,7 @@ interface ProfileFormProps {
 
 export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [avatarId, setAvatarId] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(initialData.avatarUrl || null);
 
   const form = useForm<UpdateProfileInput>({
@@ -44,13 +45,15 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
     defaultValues: {
       name: initialData.name || "",
       email: initialData.email,
-      avatarId: undefined, // ← FIX: undefined, avatar ID hanya ada setelah upload baru
-      avatarUrl: initialData.avatarUrl || undefined, // ← FIX: undefined, bukan ""
+      avatarId: undefined,
+      avatarUrl: initialData.avatarUrl || undefined,
       bio: initialData.bio || "",
     },
   });
 
-  const handleAvatarSelect = (fileId: string, url: string) => {
+  // _file parameter is required by SimpleAvatarUpload interface but not used
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleAvatarSelect = (fileId: string, url: string, _file: File) => {
     setAvatarId(fileId);
     setAvatarUrl(url);
     // Update form values and mark as dirty
@@ -69,13 +72,8 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
   };
 
   const onSubmit = async (data: UpdateProfileInput) => {
-    console.log("[DEBUG] Profile form submit called with data:", data);
-    console.log("[DEBUG] Form is dirty:", form.formState.isDirty);
-    console.log("[DEBUG] avatarId:", data.avatarId);
-    console.log("[DEBUG] avatarUrl:", data.avatarUrl);
     setIsLoading(true);
     try {
-      console.log("[DEBUG] Sending PUT request to:", `/api/users/${initialData.id}/profile`);
       const response = await fetch(`/api/users/${initialData.id}/profile`, {
         method: "PUT",
         headers: {
@@ -84,12 +82,9 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
         body: JSON.stringify(data),
       });
 
-      console.log("[DEBUG] Response status:", response.status);
       const result = await response.json();
-      console.log("[DEBUG] Response data:", result);
 
       if (!response.ok) {
-        console.error("[ERROR] API returned error:", result);
         throw new Error(result.message || "Failed to update profile");
       }
 
@@ -101,7 +96,7 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
       // Call onSuccess callback if provided
       onSuccess?.();
     } catch (error) {
-      console.error("[ERROR] Failed to update profile:", error);
+      console.error("Failed to update profile:", error);
       toast.error(error instanceof Error ? error.message : "Failed to update profile");
     } finally {
       setIsLoading(false);
@@ -111,7 +106,7 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       {/* Avatar Upload */}
-      <AvatarUpload
+      <SimpleAvatarUpload
         currentAvatarUrl={avatarUrl}
         userName={form.watch("name") || undefined}
         onAvatarSelect={handleAvatarSelect}

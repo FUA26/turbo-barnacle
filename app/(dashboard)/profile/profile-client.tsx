@@ -7,8 +7,8 @@
  * Uses tabs to separate profile editing from password changing
  */
 
-import { SimpleAvatarUpload } from "@/components/profile/avatar-upload-simple";
 import { ChangePasswordForm } from "@/components/profile/change-password-form";
+import { ProfileForm } from "@/components/profile/profile-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LockPasswordIcon, UserCircleIcon } from "@hugeicons/core-free-icons";
@@ -27,8 +27,8 @@ interface ProfileClientProps {
     };
     createdAt: Date;
     updatedAt: Date;
-    avatarId: string | null; // NEW
-    avatarUrl: string | null; // NEW (proxy URL)
+    avatarId: string | null;
+    avatarUrl: string | null;
   };
 }
 
@@ -38,62 +38,6 @@ export function ProfileClient({ user }: ProfileClientProps) {
   const handleProfileUpdateSuccess = () => {
     // Refresh the page to get updated data
     router.refresh();
-  };
-
-  // _file parameter is required by SimpleAvatarUpload interface but not used
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleAvatarSelect = async (fileId: string, url: string, _file: File) => {
-    try {
-      const response = await fetch(`/api/users/${user.id}/profile`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          avatarId: fileId,
-          avatarUrl: url, // Proxy URL
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        console.error("Failed to update avatar:", error);
-        // TODO: Show toast notification to user
-        return;
-      }
-
-      handleProfileUpdateSuccess();
-    } catch (error) {
-      console.error("Error updating avatar:", error);
-      // TODO: Show toast notification to user
-    }
-  };
-
-  const handleAvatarRemove = async () => {
-    try {
-      const response = await fetch(`/api/users/${user.id}/profile`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          avatarId: "",
-          avatarUrl: "",
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        console.error("Failed to remove avatar:", error);
-        // TODO: Show toast notification to user
-        return;
-      }
-
-      handleProfileUpdateSuccess();
-    } catch (error) {
-      console.error("Error removing avatar:", error);
-      // TODO: Show toast notification to user
-    }
   };
 
   return (
@@ -121,15 +65,21 @@ export function ProfileClient({ user }: ProfileClientProps) {
         <TabsContent value="profile">
           <Card>
             <CardHeader>
-              <CardTitle>Profile Picture</CardTitle>
-              <CardDescription>Upload a photo to personalize your profile</CardDescription>
+              <CardTitle>Profile Information</CardTitle>
+              <CardDescription>
+                Update your profile information and manage your account
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <SimpleAvatarUpload
-                currentAvatarUrl={user.avatarUrl ?? undefined}
-                userName={user.name}
-                onAvatarSelect={handleAvatarSelect}
-                onAvatarRemove={handleAvatarRemove}
+              <ProfileForm
+                initialData={{
+                  id: user.id,
+                  name: user.name,
+                  email: user.email,
+                  avatarUrl: user.avatarUrl,
+                  bio: user.bio,
+                }}
+                onSuccess={handleProfileUpdateSuccess}
               />
             </CardContent>
           </Card>
