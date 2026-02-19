@@ -81,3 +81,50 @@ export function getPublicUrl(storagePath: string): string {
 
   return `${protocol}://${cdnDomain}/${env.MINIO_BUCKET}/${storagePath}`;
 }
+
+/**
+ * List all objects in MinIO bucket (with pagination support)
+ *
+ * @param s3 - S3 client instance
+ * @param bucket - Bucket name
+ * @returns Array of all objects with metadata
+ */
+export async function listAllObjects(
+  s3: S3Client,
+  bucket: string
+): Promise<Array<{ key: string; size: number; lastModified: Date }>> {
+  const { ListObjectsV2Command } = await import("@aws-sdk/client-s3");
+
+  const allObjects: Array<{ key: string; size: number; lastModified: Date }> = [];
+  let continuationToken: string | undefined = undefined;
+
+  do {
+    const response = (await s3.send(
+      new ListObjectsV2Command({
+        Bucket: bucket,
+        ContinuationToken: continuationToken,
+      })
+    )) as {
+      Contents?: Array<{
+        Key?: string;
+        Size?: number;
+        LastModified?: Date;
+      }>;
+      NextContinuationToken?: string;
+    };
+
+    if (response.Contents) {
+      const objects = response.Contents.filter((obj) => obj.Key).map((obj) => ({
+        key: obj.Key!,
+        size: obj.Size!,
+        lastModified: obj.LastModified!,
+      }));
+
+      allObjects.push(...objects);
+    }
+
+    continuationToken = response.NextContinuationToken;
+  } while (continuationToken); // Continue until no more pages
+
+  return allObjects;
+}
