@@ -60,22 +60,26 @@ export function UserDialog({ open, onOpenChange, mode, userId, onSuccess }: User
   async function fetchUser() {
     try {
       const res = await fetch(`/api/users/${userId}`);
-      if (!res.ok) throw new Error("Failed to fetch user");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: "Unknown error" }));
+        throw new Error(errorData.error || errorData.message || "Failed to fetch user");
+      }
       const data = await res.json();
       setInitialData({
         name: data.user.name || "",
         email: data.user.email,
-        roleId: data.user.role.id,
+        roleId: data.user.role?.id,
       });
     } catch (error) {
       console.error("Failed to fetch user:", error);
-      toast.error("Failed to load user data");
+      toast.error(error instanceof Error ? error.message : "Failed to load user data");
     }
   }
 
-  async function handleSubmit(data:
-    | { name: string; email: string; roleId: string; password: string }
-    | { name?: string; email?: string; roleId?: string; password?: string }
+  async function handleSubmit(
+    data:
+      | { name: string; email: string; roleId: string; password: string }
+      | { name?: string; email?: string; roleId?: string; password?: string }
   ) {
     setIsLoading(true);
     try {

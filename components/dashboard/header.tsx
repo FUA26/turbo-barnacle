@@ -20,15 +20,14 @@ interface HeaderProps {
 
 export function Header({ user }: HeaderProps) {
   const pathname = usePathname();
-  const { title, icon: PageIcon } = getPageTitle(pathname);
+  const { icon: PageIcon } = getPageTitle(pathname);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
       <SidebarTrigger className="-ml-1" />
       <HugeiconsIcon icon={PageIcon as never} className="h-5 w-5 text-muted-foreground" />
-      <h1 className="text-xl font-semibold">{title}</h1>
+      <Breadcrumbs />
       <div className="ml-auto flex items-center gap-4">
-        <Breadcrumbs />
         <UserDropdown user={user} />
       </div>
     </header>
