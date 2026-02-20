@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useCmdK } from "@/hooks/use-cmd-k";
 import { Search01Icon } from "@hugeicons/core-free-icons";
@@ -61,6 +61,7 @@ export function CommandDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="overflow-hidden p-0 shadow-lg">
+        <DialogTitle className="sr-only">Global Search</DialogTitle>
         <div className="flex items-center border-b px-4">
           <HugeiconsIcon icon={Search01Icon} className="h-5 w-5 text-muted-foreground" />
           <Input
