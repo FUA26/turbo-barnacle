@@ -10,7 +10,7 @@ interface SearchResult {
 
 export const GET = protectApiRoute({
   permissions: [], // Empty array - we filter results based on permissions
-  handler: async (req, { user }) => {
+  handler: async (req, { user, permissions }) => {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q")?.trim() ?? "";
 
@@ -29,9 +29,10 @@ export const GET = protectApiRoute({
     };
 
     // Check permissions for each entity type
-    const canReadUsers = user.permissions?.includes("USER_READ_ANY") ?? false;
-    const canManageRoles = user.permissions?.includes("ADMIN_ROLES_MANAGE") ?? false;
-    const canManagePermissions = user.permissions?.includes("ADMIN_PERMISSIONS_MANAGE") ?? false;
+    const canReadUsers = permissions.permissions?.includes("USER_READ_ANY") ?? false;
+    const canManageRoles = permissions.permissions?.includes("ADMIN_ROLES_MANAGE") ?? false;
+    const canManagePermissions =
+      permissions.permissions?.includes("ADMIN_PERMISSIONS_MANAGE") ?? false;
 
     // Search users
     if (canReadUsers) {
@@ -56,10 +57,7 @@ export const GET = protectApiRoute({
     if (canManageRoles) {
       results.roles = await prisma.role.findMany({
         where: {
-          OR: [
-            { name: { contains: query, mode: "insensitive" } },
-            { description: { contains: query, mode: "insensitive" } },
-          ],
+          name: { contains: query, mode: "insensitive" },
         },
         select: {
           id: true,

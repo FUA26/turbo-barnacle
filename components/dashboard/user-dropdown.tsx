@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, LogOut, Settings, UserCircle } from "@hugeicons/core-free-icons";
+import { ChevronDown, LogOut, Settings, UserCircleIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
@@ -70,7 +70,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link href="/profile" className="cursor-pointer">
-              <HugeiconsIcon icon={UserCircle} className="mr-2 h-4 w-4" />
+              <HugeiconsIcon icon={UserCircleIcon} className="mr-2 h-4 w-4" />
               Profile
             </Link>
           </DropdownMenuItem>

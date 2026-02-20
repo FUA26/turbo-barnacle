@@ -124,6 +124,36 @@ const avatarUrl = fileId ? getFileServeUrl(fileId) : null;
 - Server-side file access (no network issues)
 - Future flexibility for CDN integration
 
+## Dashboard Navigation
+
+Smart header and navigation system with breadcrumbs, user menu, and global search:
+
+- **Smart Header**: Dynamic page title and icon based on current route
+- **Breadcrumbs**: Navigation trail showing current position in hierarchy
+- **User Dropdown**: Quick access to Profile, Settings, Logout from avatar menu
+- **Global Search**: Press Cmd+K / Ctrl+K to search users, roles, permissions
+- **Active Indicators**: Enhanced sidebar styling for current page
+
+**Usage**:
+
+```typescript
+// Smart header and breadcrumbs work automatically
+// Just navigate to routes in app/(dashboard) directory
+
+// Global search
+// Press Cmd+K (Mac) or Ctrl+K (Windows) anywhere in dashboard
+// Search results are permission-filtered
+```
+
+**Components**:
+
+- `components/dashboard/header.tsx` - Smart header with breadcrumbs and user dropdown
+- `components/dashboard/breadcrumbs.tsx` - Breadcrumb navigation
+- `components/dashboard/user-dropdown.tsx` - User menu with avatar
+- `components/dashboard/search-command/command-dialog.tsx` - Global search dialog
+- `lib/dashboard/page-title.ts` - Page title and icon mapping
+- `lib/dashboard/breadcrumb-utils.ts` - Breadcrumb generation utilities
+
 ## Development Environment
 
 ### MinIO (Object Storage)

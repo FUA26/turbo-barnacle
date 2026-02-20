@@ -25,7 +25,7 @@ export function Header({ user }: HeaderProps) {
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
       <SidebarTrigger className="-ml-1" />
-      <HugeiconsIcon icon={PageIcon} className="h-5 w-5 text-muted-foreground" />
+      <HugeiconsIcon icon={PageIcon as never} className="h-5 w-5 text-muted-foreground" />
       <h1 className="text-xl font-semibold">{title}</h1>
       <div className="ml-auto flex items-center gap-4">
         <Breadcrumbs />

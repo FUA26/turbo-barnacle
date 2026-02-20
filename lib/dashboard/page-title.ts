@@ -10,7 +10,7 @@ import {
 
 export interface PageTitle {
   title: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: unknown; // IconSvgObject from @hugeicons/core-free-icons
 }
 
 export function getPageTitle(pathname: string): PageTitle {

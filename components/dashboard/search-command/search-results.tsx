@@ -4,7 +4,7 @@ import { SecurityIcon, Settings01Icon, UserCircleIcon, Users } from "@hugeicons/
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 
-interface SearchResults {
+export interface SearchResults {
   users: Array<{ id: string; name: string | null; email: string; avatarId: string | null }>;
   roles: Array<{ id: string; name: string; _count: { permissions: number } }>;
   permissions: Array<{ id: string; name: string; category: string | null }>;
