@@ -16,10 +16,8 @@ export function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
   ];
 
   // Build breadcrumb path based on segments
-  let currentPath = "";
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
-    currentPath += `/${segment}`;
 
     if (segment === "dashboard") continue;
 
@@ -48,13 +46,13 @@ export function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
       continue;
     }
 
+    // Skip profile from breadcrumbs
     if (segment === "profile") {
-      breadcrumbs.push({ label: "Profile", href: "/profile" });
       continue;
     }
 
+    // Skip settings from breadcrumbs
     if (segment === "settings") {
-      breadcrumbs.push({ label: "Settings", href: "/settings" });
       continue;
     }
 

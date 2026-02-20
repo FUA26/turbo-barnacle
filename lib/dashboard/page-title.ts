@@ -4,7 +4,6 @@ import {
   Settings,
   Settings01Icon,
   Settings02Icon,
-  UserCircleIcon,
   Users,
 } from "@hugeicons/core-free-icons";
 
@@ -41,8 +40,6 @@ export function getPageTitle(pathname: string): PageTitle {
         default:
           return { title: "Management", icon: Settings };
       }
-    case "profile":
-      return { title: "Profile", icon: UserCircleIcon };
     case "settings":
       return { title: "Settings", icon: Settings };
     default:

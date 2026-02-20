@@ -9,9 +9,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Settings01Icon, Settings02Icon, UserCircleIcon } from "@hugeicons/core-free-icons";
+import { Settings01Icon, Settings02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import Link from "next/link";
 
 interface SettingsClientProps {
   user: {
@@ -39,27 +38,13 @@ export function SettingsClient({ user }: SettingsClientProps) {
       {/* Quick Links */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Links</CardTitle>
+          <CardTitle>Quick Actions</CardTitle>
           <CardDescription>Commonly used settings and actions</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2">
-            <Link href="/profile">
-              <Card className="cursor-pointer transition-colors hover:bg-muted/50">
-                <CardContent className="flex items-center gap-4 p-6">
-                  <div className="rounded-lg bg-primary/10 p-3">
-                    <HugeiconsIcon icon={UserCircleIcon} className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Profile Settings</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Update your profile information and password
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          </div>
+        <CardContent className="flex flex-col gap-3">
+          <p className="text-sm text-muted-foreground">
+            Quick actions and shortcuts will be added here soon.
+          </p>
         </CardContent>
       </Card>
 
