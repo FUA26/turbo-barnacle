@@ -5,6 +5,7 @@
  * Requires: ADMIN_ROLES_MANAGE permission
  */
 
+import { RolesTableSkeleton } from "@/components/admin/roles-table-skeleton";
 import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
 import { Suspense } from "react";
 import { RolesTableWithActions } from "./roles-table-actions";
@@ -17,9 +18,7 @@ function RolesManagerContent() {
         <p className="text-muted-foreground">Manage roles and their permissions</p>
       </div>
 
-      <Suspense
-        fallback={<div className="rounded-lg border p-6 text-center">Loading roles...</div>}
-      >
+      <Suspense fallback={<RolesTableSkeleton />}>
         <RolesTableWithActions />
       </Suspense>
     </div>

@@ -8,6 +8,7 @@
 
 import { DeleteRoleConfirmDialog } from "@/components/admin/delete-role-confirm-dialog";
 import { RoleDialog } from "@/components/admin/role-dialog";
+import { RolesTableSkeleton } from "@/components/admin/roles-table-skeleton";
 import { RolesTanStackTable } from "@/components/admin/roles-tanstack-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
@@ -145,11 +146,7 @@ export function RolesTableWithActions() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-sm text-muted-foreground">Loading roles...</div>
-      </div>
-    );
+    return <RolesTableSkeleton />;
   }
 
   return (

@@ -8,6 +8,7 @@
 
 import { UserDialog } from "@/components/admin/user-dialog";
 import { UsersDataTable } from "@/components/admin/users-data-table";
+import { UsersTableSkeleton } from "@/components/admin/users-table-skeleton";
 import { Button } from "@/components/ui/button";
 import { AddCircleIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -67,7 +68,7 @@ export function UsersTableWithActions() {
   };
 
   if (loading) {
-    return <div className="rounded-lg border p-6 text-center">Loading...</div>;
+    return <UsersTableSkeleton />;
   }
 
   return (
