@@ -16,9 +16,25 @@ export default async function Layout({ children }: { children: React.ReactNode }
   // Load permissions on server-side to avoid client-side fetching
   const permissions = await loadUserPermissions(session.user.id);
 
+  // Fetch full user data including role
+  const { prisma } = await import("@/lib/db/prisma");
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      email: true,
+      name: true,
+      avatarId: true,
+      role: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
   return (
     <PermissionProvider initialPermissions={permissions}>
-      <DashboardLayout user={session.user}>{children}</DashboardLayout>
+      <DashboardLayout user={user ?? session.user}>{children}</DashboardLayout>
     </PermissionProvider>
   );
 }
