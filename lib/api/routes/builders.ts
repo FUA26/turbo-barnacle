@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth/config";
 import { NextRequest } from "next/server";
 import { ZodSchema } from "zod";
-import { RateLimitError, UnauthorizedError, ValidationError } from "../errors";
+import { RateLimitError, UnauthorizedError, ValidationError } from "../errors/api-error";
 import type { RateLimiter, RateLimitResult } from "../middleware/rate-limit";
 
 export interface ApiHandlerContext {

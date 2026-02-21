@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ApiError } from "../errors";
+import { ApiError } from "../errors/api-error";
 
 export interface ApiSuccessResponse<T = unknown> {
   success: true;

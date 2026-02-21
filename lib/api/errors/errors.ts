@@ -1,8 +1,8 @@
-import { ApiError } from "./types";
+import { ApiError, ApiErrorDetails } from "./types";
 
 export class ValidationError extends ApiError {
   constructor(message: string, details?: unknown) {
-    super(message, "VALIDATION_ERROR", 400, details);
+    super(message, "VALIDATION_ERROR", 400, details as ApiErrorDetails);
   }
 }
 

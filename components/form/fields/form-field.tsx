@@ -9,7 +9,7 @@ import {
   FormField as RHFFormField,
 } from "@/components/ui/form";
 import React from "react";
-import { ControllerProps, FieldPath, FieldValues } from "react-hook-form";
+import { ControllerProps, FieldPath, FieldValues, ControllerRenderProps } from "react-hook-form";
 
 interface FormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -20,7 +20,7 @@ interface FormFieldProps<
   label?: string;
   description?: string;
   required?: boolean;
-  render: (props: { field: ControllerProps<TFieldValues, TName>["field"] }) => React.ReactElement;
+  render: (props: { field: ControllerRenderProps<TFieldValues, TName> }) => React.ReactElement;
 }
 
 export function FormField<

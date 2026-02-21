@@ -1,13 +1,14 @@
-import { ApiError } from "../errors";
+import { NextResponse } from "next/server";
+import { ApiError } from "../errors/api-error";
 import { apiJsonError } from "../response/api-response";
 
 export type ApiHandler = (req: Request, context?: unknown) => Promise<Response>;
 
-export async function withErrorHandler(...args: Parameters<ApiHandler>): Promise<Response> {
-  const [handler, req, context] = args;
-
+export async function withErrorHandler(
+  handler: ApiHandler
+): Promise<Response> {
   try {
-    return await handler(req, context);
+    return await handler.apply(null, arguments as unknown as any);
   } catch (error) {
     if (error instanceof ApiError) {
       return apiJsonError(error);
@@ -18,6 +19,6 @@ export async function withErrorHandler(...args: Parameters<ApiHandler>): Promise
 
 export function withApiHandler(handler: ApiHandler): ApiHandler {
   return async (req: Request, context?: unknown) => {
-    return withErrorHandler(handler, req, context);
+    return withErrorHandler(handler.bind(null, req, context));
   };
 }

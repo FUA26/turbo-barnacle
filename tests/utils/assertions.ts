@@ -2,10 +2,10 @@ import { expect } from "vitest";
 
 // Custom assertion for session data
 expect.extend({
-  toHavePermission(received: { permissions?: string[] }, permission: string) {
+  toHavePermission(received: { permissions?: string[] | undefined }, permission: string) {
     const hasPermission = received?.permissions?.includes(permission);
     return {
-      pass: hasPermission,
+      pass: !!hasPermission,
       message: () =>
         hasPermission
           ? `expected permissions not to include ${permission}`
@@ -15,7 +15,7 @@ expect.extend({
 });
 
 declare module "vitest" {
-  interface Assertion<T = unknown> {
+  interface Assertion<T = any> {
     toHavePermission(permission: string): T;
   }
 }
