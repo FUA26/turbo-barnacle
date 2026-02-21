@@ -20,8 +20,8 @@ export const GET = protectApiRoute({
   permissions: ["FILE_READ_OWN"] as Permission[],
   handler: async (req, { user }, ...args) => {
     try {
-      const params = args[0] as { params: { id: string } };
-      const fileId = params.params.id;
+      const params = await (args[0] as { params: Promise<{ id: string }> }).params;
+      const fileId = params.id;
 
       const file = await getFileById(fileId, user.id);
 
@@ -49,8 +49,8 @@ export const DELETE = protectApiRoute({
   permissions: ["FILE_DELETE_OWN"] as Permission[],
   handler: async (req, { user, permissions: permissionsContext }, ...args) => {
     try {
-      const params = args[0] as { params: { id: string } };
-      const fileId = params.params.id;
+      const params = await (args[0] as { params: Promise<{ id: string }> }).params;
+      const fileId = params.id;
 
       // Check if user has admin permission
       const hasAdminPermission = permissionsContext.permissions.includes("FILE_DELETE_ANY");
