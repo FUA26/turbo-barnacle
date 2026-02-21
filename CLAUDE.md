@@ -17,7 +17,21 @@ pnpm dev          # Start development server
 pnpm build        # Build for production
 pnpm start        # Start production server
 pnpm lint         # Run ESLint
+pnpm format       # Format code with Prettier
+pnpm format:check # Check code formatting
 ```
+
+### Database Commands
+
+```bash
+pnpm prisma:generate  # Generate Prisma Client
+pnpm prisma:migrate   # Run database migrations
+pnpm prisma:push      # Push schema changes to database (dev only)
+pnpm prisma:seed      # Seed database with initial data
+pnpm prisma:studio    # Open Prisma Studio (database GUI)
+```
+
+**Note**: After RBAC role/permission changes, restart dev server to clear permission cache.
 
 ## Architecture
 
@@ -156,6 +170,25 @@ Smart header and navigation system with breadcrumbs, user menu, and global searc
 
 ## Development Environment
 
+### Local Services (Docker)
+
+Start required services (MinIO for object storage):
+
+```bash
+docker-compose up -d
+```
+
+This starts:
+
+- MinIO (ports 9000 API, 9001 console)
+- PostgreSQL (if configured in docker-compose.yml)
+
+Stop services:
+
+```bash
+docker-compose down
+```
+
 ### MinIO (Object Storage)
 
 - Docker service: see `docker-compose.yml` for configuration
@@ -171,6 +204,19 @@ Smart header and navigation system with breadcrumbs, user menu, and global searc
 
 ## Code Quality Standards
 
+### Formatting
+
+```bash
+pnpm format        # Format all files
+pnpm format:check  # Check formatting without modifying
+```
+
+This project uses:
+
+- **Prettier** for code formatting
+- **prettier-plugin-organize-imports** for import organization
+- Lefthook runs prettier + eslint on pre-commit
+
 This project uses lefthook for Git hooks:
 
 - Pre-commit: prettier + eslint (must pass to commit)
@@ -178,6 +224,11 @@ This project uses lefthook for Git hooks:
 - Type safety: Use `unknown` instead of `any`, with type guards like `error instanceof Error`
 - Unused variables: prefix with `_` (e.g., `_req`) or remove
 - Bypass hooks (not recommended): `git commit --no-verify` or `git push --no-verify`
+
+## Additional Documentation
+
+- **KNOWN_ISSUES.md** - Runtime issues and troubleshooting
+- **TECH_DEBT.md** - Technical debt tracking and cdnUrl field documentation
 
 ## Environment Configuration
 
