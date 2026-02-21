@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import type { ReactNode } from "react";
 
 // Sidebar state
 export const sidebarOpenAtom = atom(true);
@@ -7,7 +8,7 @@ export const sidebarCollapsedAtom = atom(false);
 // Modal state
 export interface ModalState {
   open: boolean;
-  content?: React.ReactNode;
+  content?: ReactNode;
   title?: string;
 }
 
