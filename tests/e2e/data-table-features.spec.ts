@@ -225,8 +225,6 @@ test.describe("DataTable Features", () => {
     test("should display pagination controls", async ({ page }) => {
       await page.goto("/manage/permissions");
 
-      // Check for pagination controls
-      const pagination = page.locator("text=/Next/i");
       // Pagination may not be visible if there are few items
       // This test just verifies the component structure exists
     });
@@ -264,14 +262,6 @@ test.describe("DataTable Features", () => {
 
       // Wait for table to load
       await page.waitForSelector("table");
-
-      // Get initial name from first row
-      const firstName = await page
-        .locator("table tbody tr")
-        .first()
-        .locator("td")
-        .nth(0)
-        .textContent();
 
       // Click on Name column header to sort
       const nameHeader = page.locator("table thead th").filter({ hasText: /name/i });
