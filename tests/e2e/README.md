@@ -138,7 +138,7 @@ tests/e2e/
 Tests use the following admin credentials (configured in `tests/e2e/helpers/auth.ts`):
 
 - Email: `admin@example.com`
-- Password: `Admin123!`
+- Password: `admin123`
 
 Make sure this user exists in your test database.
 

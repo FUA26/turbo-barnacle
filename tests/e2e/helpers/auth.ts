@@ -8,7 +8,7 @@ import { Page } from "@playwright/test";
 
 const TEST_ADMIN = {
   email: "admin@example.com",
-  password: "Admin123!",
+  password: "admin123",
 };
 
 export async function loginAsAdmin(page: Page) {

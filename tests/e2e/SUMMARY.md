@@ -187,7 +187,7 @@ View test reports in:
 ### Admin User
 
 - Email: `admin@example.com`
-- Password: `Admin123!`
+- Password: `admin123`
 
 This user is created by seed scripts and has all permissions.
 
