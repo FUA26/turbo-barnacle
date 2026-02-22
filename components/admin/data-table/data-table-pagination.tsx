@@ -1,12 +1,10 @@
-/**
- * Data Table Pagination Component
- *
- * Enhanced pagination with row count display and page size selector
- */
-
 "use client";
 
+import { Table } from "@tanstack/react-table";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -14,126 +12,103 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 
-interface DataTablePaginationProps {
-  table: any;
-  totalRows?: number;
+interface DataTablePaginationProps<TData> {
+  table: Table<TData>;
   pageSizeOptions?: number[];
 }
 
-export function DataTablePaginationSkeleton() {
-  return (
-    <div className="flex items-center justify-between px-2 py-4">
-      <Skeleton className="h-5 w-[150px]" />
-      <div className="flex gap-2">
-        <Skeleton className="h-9 w-20" />
-        <Skeleton className="h-9 w-9" />
-        <Skeleton className="h-9 w-9" />
-        <Skeleton className="h-9 w-20" />
-      </div>
-    </div>
-  );
-}
-
-export function DataTablePagination({
+export function DataTablePagination<TData>({
   table,
-  totalRows,
-  pageSizeOptions = [10, 20, 30, 50, 100],
-}: DataTablePaginationProps) {
-  const pagination = table.getState().pagination;
-  const rowCount = totalRows ?? table.getFilteredRowModel().rows.length;
-  const pageSize = pagination.pageSize;
-  const currentPage = pagination.pageIndex + 1;
-  const totalPages = table.getPageCount();
-
-  const startRow = rowCount === 0 ? 0 : pagination.pageIndex * pageSize + 1;
-  const endRow = Math.min((pagination.pageIndex + 1) * pageSize, rowCount);
+  pageSizeOptions = [10, 20, 30, 40, 50],
+}: DataTablePaginationProps<TData>) {
+  const pageIndex = table.getState().pagination.pageIndex;
+  const pageCount = table.getPageCount();
 
   return (
-    <div className="flex items-center justify-between px-2 py-4">
-      {/* Row Count Display */}
-      <div className="flex-1 text-sm text-muted-foreground">
-        {rowCount === 0 ? (
-          "No rows found"
-        ) : (
-          <>
-            Showing {startRow} to {endRow} of {rowCount} row(s)
-          </>
+    <div className="flex items-center justify-between px-2">
+      <div className="text-muted-foreground flex-1 text-sm">
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <span>
+            {table.getFilteredSelectedRowModel().rows.length} of{" "}
+            {table.getFilteredRowModel().rows.length} row(s) selected.
+          </span>
         )}
       </div>
-
-      {/* Pagination Controls */}
-      <div className="flex items-center gap-6 lg:gap-8">
-        {/* Page Size Selector */}
-        <div className="flex items-center gap-2">
+      <div className="flex items-center space-x-6 lg:space-x-8">
+        <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select
-            value={`${pageSize}`}
+            value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value));
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={pageSize} />
+              <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {pageSizeOptions.map((size) => (
-                <SelectItem key={size} value={`${size}`}>
-                  {size}
+              {pageSizeOptions.map((pageSize) => (
+                <SelectItem key={pageSize} value={`${pageSize}`}>
+                  {pageSize}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-
-        {/* Page Navigation */}
-        <div className="flex items-center gap-2">
-          <p className="text-sm font-medium">
-            Page {currentPage} of {totalPages}
-          </p>
-          <div className="flex gap-1">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => table.setPageIndex(0)}
-              disabled={currentPage === 1}
-            >
-              {"<<"}
-              <span className="sr-only">First page</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {"<"}
-              <span className="sr-only">Previous page</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {">"}
-              <span className="sr-only">Next page</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => table.setPageIndex(totalPages - 1)}
-              disabled={currentPage === totalPages}
-            >
-              {">>"}
-              <span className="sr-only">Last page</span>
-            </Button>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            className="hidden h-8 w-8 p-0 lg:flex"
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <span className="sr-only">Go to first page</span>
+            <ChevronsLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            className="h-8 w-8 p-0"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <span className="sr-only">Go to previous page</span>
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <div className="flex items-center gap-1">
+            <Input
+              type="number"
+              min={1}
+              max={pageCount}
+              value={pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                if (page >= 0 && page < pageCount) {
+                  table.setPageIndex(page);
+                }
+              }}
+              className="h-8 w-12 text-center"
+            />
+            <span className="text-muted-foreground text-sm">of {pageCount}</span>
           </div>
+          <Button
+            variant="outline"
+            className="h-8 w-8 p-0"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <span className="sr-only">Go to next page</span>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            className="hidden h-8 w-8 p-0 lg:flex"
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+          >
+            <span className="sr-only">Go to last page</span>
+            <ChevronsRight className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>
