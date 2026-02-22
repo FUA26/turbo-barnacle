@@ -84,7 +84,8 @@
       "Bash(pnpm:*)",
       "Bash(git log:*)",
       "Bash(sudo apt-get:*)",
-      "Bash(sudo apt-get install:*)"
+      "Bash(sudo apt-get install:*)",
+      "Bash(ldd:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -6,7 +6,13 @@ End-to-end tests for critical user flows using Playwright.
 
 ### Prerequisites
 
-**Linux users**: Install system dependencies for Chromium:
+**Linux users**: Install system dependencies for Chromium using our helper script:
+
+```bash
+./scripts/install-playwright-deps.sh
+```
+
+Or install manually:
 
 ```bash
 # Ubuntu/Debian
@@ -14,7 +20,7 @@ sudo apt-get update
 sudo apt-get install -y \
   libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 \
   libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
-  libxrandr2 libgbm1 libasound2
+  libxrandr2 libgbm1 libasound2 libatspi2.0-0 libxshmfence1
 
 # Fedora
 sudo dnf install \
@@ -24,7 +30,7 @@ sudo dnf install \
 # Arch Linux
 sudo pacman -S \
   atk at-spi2-core cups libdrm libxkbcommon \
-  libxcomposite libxdamage libxfixes libxrandr mesa alsa-lib
+  libxcomposite libxdamage libxfixes libxrandr mesa alsa-lib libxshmfence
 ```
 
 ### Installation
