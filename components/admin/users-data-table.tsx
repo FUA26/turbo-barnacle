@@ -11,6 +11,7 @@ import {
   DataTable,
   DataTableActionBar,
   DataTableColumnHeader,
+  DataTableFacetedFilter,
   DataTableViewOptions,
   type FacetedFilterOption,
 } from "@/components/admin/data-table";
@@ -110,6 +111,10 @@ export function UsersDataTable({ users, onRefresh }: UsersDataTableProps) {
         const roleName = row.original.role.name;
         return <Badge variant="outline">{roleName}</Badge>;
       },
+      filterFn: (row, columnId, filterValue: string[]) => {
+        const roleName = row.original.role.name;
+        return filterValue.includes(roleName);
+      },
     },
     {
       accessorKey: "createdAt",
@@ -162,13 +167,20 @@ export function UsersDataTable({ users, onRefresh }: UsersDataTableProps) {
         data={users}
         columns={columns}
         toolbar={(table) => (
-          <div className="flex items-center justify-between gap-4">
-            <Input
-              placeholder="Filter users..."
-              value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-              onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-              className="max-w-sm"
-            />
+          <div className="flex items-center justify-between gap-4 flex-1">
+            <div className="flex items-center gap-2">
+              <Input
+                placeholder="Filter users..."
+                value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
+                className="max-w-sm"
+              />
+              <DataTableFacetedFilter
+                title="Role"
+                options={roleOptions}
+                column={table.getColumn("role")}
+              />
+            </div>
             <DataTableViewOptions table={table} />
           </div>
         )}
