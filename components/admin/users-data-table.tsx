@@ -55,6 +55,7 @@ export function UsersDataTable({ users, onRefresh }: UsersDataTableProps) {
     userId: "",
   });
   const [bulkDialog, setBulkDialog] = useState(false);
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
   const canUpdateAny = useCan(["USER_UPDATE_ANY"]);
   const canDeleteAny = useCan(["USER_DELETE_ANY"]);
@@ -173,9 +174,19 @@ export function UsersDataTable({ users, onRefresh }: UsersDataTableProps) {
         )}
         actionBar={(table) => (
           <DataTableActionBar table={table}>
-            {(selectedRows) => (
+            {() => (
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => setBulkDialog(true)}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    const selectedIds = table
+                      .getFilteredSelectedRowModel()
+                      .rows.map((row) => row.original.id);
+                    setSelectedUserIds(selectedIds);
+                    setBulkDialog(true);
+                  }}
+                >
                   Bulk Actions
                 </Button>
               </div>
@@ -204,8 +215,9 @@ export function UsersDataTable({ users, onRefresh }: UsersDataTableProps) {
       <BulkActionsDialog
         open={bulkDialog}
         onOpenChange={setBulkDialog}
-        userIds={table.getFilteredSelectedRowModel().rows.map((row) => row.original.id)}
+        userIds={selectedUserIds}
         onSuccess={() => {
+          setSelectedUserIds([]);
           onRefresh?.();
         }}
       />
