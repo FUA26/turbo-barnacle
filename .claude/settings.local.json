@@ -82,7 +82,9 @@
       "Bash(test:*)",
       "Bash(node:*)",
       "Bash(pnpm:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(sudo apt-get:*)",
+      "Bash(sudo apt-get install:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
