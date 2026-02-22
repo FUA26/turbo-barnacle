@@ -3,29 +3,30 @@
 /**
  * Users Data Table Component
  *
- * Enhanced table with bulk selection, actions dropdown, and pagination
+ * Enhanced table with sorting, filtering, pagination, and bulk actions
+ * Using the new shared-data-table components
  */
 
+import {
+  DataTable,
+  DataTableActionBar,
+  DataTableColumnHeader,
+  DataTableViewOptions,
+  type FacetedFilterOption,
+} from "@/components/admin/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import { useCan } from "@/lib/rbac-client/hooks";
 import { Delete01Icon, Edit01Icon, MoreVerticalIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { type ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import { BulkActionsDialog } from "./bulk-actions-dialog";
 import { DeleteConfirmDialog } from "./delete-confirm-dialog";
@@ -45,7 +46,6 @@ interface UsersDataTableProps {
 }
 
 export function UsersDataTable({ users, onRefresh }: UsersDataTableProps) {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [editDialog, setEditDialog] = useState<{ open: boolean; userId: string }>({
     open: false,
     userId: "",
@@ -59,110 +59,130 @@ export function UsersDataTable({ users, onRefresh }: UsersDataTableProps) {
   const canUpdateAny = useCan(["USER_UPDATE_ANY"]);
   const canDeleteAny = useCan(["USER_DELETE_ANY"]);
 
-  function handleSelectAll(checked: boolean) {
-    setSelectedIds(checked ? users.map((u) => u.id) : []);
-  }
+  // Role filter options
+  const roleOptions: FacetedFilterOption[] = [
+    { label: "Admin", value: "ADMIN" },
+    { label: "User", value: "USER" },
+    { label: "Manager", value: "MANAGER" },
+    { label: "Editor", value: "EDITOR" },
+  ];
 
-  function handleSelectOne(userId: string, checked: boolean) {
-    setSelectedIds((prev) => (checked ? [...prev, userId] : prev.filter((id) => id !== userId)));
-  }
+  // Column definitions
+  const columns: ColumnDef<User>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllPageRowsSelected()}
+          onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
+          className="translate-y-[2px]"
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={(e) => row.toggleSelected(!!e.target.checked)}
+          className="translate-y-[2px]"
+          aria-label={`Select ${row.original.name || row.original.email}`}
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+      cell: ({ row }) => row.getValue("name") || <span className="text-muted-foreground">—</span>,
+    },
+    {
+      accessorKey: "email",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
+      cell: ({ row }) => <div className="text-muted-foreground">{row.getValue("email")}</div>,
+    },
+    {
+      accessorKey: "role",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Role" />,
+      cell: ({ row }) => {
+        const roleName = row.original.role.name;
+        return <Badge variant="outline">{roleName}</Badge>;
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
+      cell: ({ row }) => {
+        const date = new Date(row.getValue("createdAt"));
+        return <span className="text-sm">{date.toLocaleDateString()}</span>;
+      },
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const user = row.original;
 
-  const isAllSelected = users.length > 0 && selectedIds.length === users.length;
-  const isSomeSelected = selectedIds.length > 0 && selectedIds.length < users.length;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Actions">
+                <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {canUpdateAny && (
+                <DropdownMenuItem onClick={() => setEditDialog({ open: true, userId: user.id })}>
+                  <HugeiconsIcon icon={Edit01Icon} className="mr-2 h-4 w-4" />
+                  Edit
+                </DropdownMenuItem>
+              )}
+              {canDeleteAny && (
+                <DropdownMenuItem
+                  onClick={() => setDeleteDialog({ open: true, userId: user.id })}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <HugeiconsIcon icon={Delete01Icon} className="mr-2 h-4 w-4" />
+                  Delete
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+      enableSorting: false,
+    },
+  ];
 
   return (
     <>
-      <div className="rounded-lg border">
-        {/* Bulk Actions Toolbar */}
-        {selectedIds.length > 0 && (
-          <div className="flex items-center justify-between border-b p-4 bg-muted/50">
-            <span className="text-sm font-medium">
-              {selectedIds.length} user{selectedIds.length > 1 ? "s" : ""} selected
-            </span>
-            <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={() => setSelectedIds([])}>
-                Clear Selection
-              </Button>
-              <Button size="sm" onClick={() => setBulkDialog(true)}>
-                Bulk Actions
-              </Button>
-            </div>
+      <DataTable
+        data={users}
+        columns={columns}
+        toolbar={(table) => (
+          <div className="flex items-center justify-between gap-4">
+            <Input
+              placeholder="Filter users..."
+              value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+              onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
+              className="max-w-sm"
+            />
+            <DataTableViewOptions table={table} />
           </div>
         )}
-
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[40px]">
-                <Checkbox
-                  checked={isAllSelected}
-                  onCheckedChange={handleSelectAll}
-                  aria-label="Select all users"
-                />
-              </TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>
-                  <Checkbox
-                    checked={selectedIds.includes(user.id)}
-                    onCheckedChange={(checked) => handleSelectOne(user.id, checked as boolean)}
-                    aria-label={`Select ${user.name || user.email}`}
-                  />
-                </TableCell>
-                <TableCell>{user.name || "—"}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  <Badge variant="outline">{user.role.name}</Badge>
-                </TableCell>
-                <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" aria-label="Actions">
-                        <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {canUpdateAny && (
-                        <DropdownMenuItem
-                          onClick={() => setEditDialog({ open: true, userId: user.id })}
-                        >
-                          <HugeiconsIcon icon={Edit01Icon} className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                      )}
-                      {canDeleteAny && (
-                        <DropdownMenuItem
-                          onClick={() => setDeleteDialog({ open: true, userId: user.id })}
-                          className="text-destructive focus:text-destructive"
-                        >
-                          <HugeiconsIcon icon={Delete01Icon} className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        {users.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <p className="text-muted-foreground">No users found</p>
-            <p className="text-sm text-muted-foreground">Create your first user to get started</p>
-          </div>
+        actionBar={(table) => (
+          <DataTableActionBar table={table}>
+            {(selectedRows) => (
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={() => setBulkDialog(true)}>
+                  Bulk Actions
+                </Button>
+              </div>
+            )}
+          </DataTableActionBar>
         )}
-      </div>
+      />
 
       {/* Dialogs */}
       <UserDialog
@@ -184,9 +204,8 @@ export function UsersDataTable({ users, onRefresh }: UsersDataTableProps) {
       <BulkActionsDialog
         open={bulkDialog}
         onOpenChange={setBulkDialog}
-        userIds={selectedIds}
+        userIds={table.getFilteredSelectedRowModel().rows.map((row) => row.original.id)}
         onSuccess={() => {
-          setSelectedIds([]);
           onRefresh?.();
         }}
       />
