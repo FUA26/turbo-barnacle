@@ -4,19 +4,25 @@
  * Demonstration of the new advanced data table features
  */
 
-import { AdvancedDataTable } from "@/components/admin/data-table/advanced-data-table";
+import {
+  DataTable,
+  DataTableActionBar,
+  DataTableColumnHeader,
+  DataTableViewOptions,
+} from "@/components/admin/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { Copy01Icon, Delete01Icon, Edit01Icon, MoreVerticalIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ColumnDef } from "@tanstack/react-table";
+import { Trash2 } from "lucide-react";
 
 // Mock data for demonstration
 interface Role {
@@ -114,23 +120,33 @@ const mockRoles: Role[] = [
   },
 ];
 
+// Filter options
+const userCountOptions = [
+  { label: "0-10", value: "0-10" },
+  { label: "11-50", value: "11-50" },
+  { label: "51-100", value: "51-100" },
+  { label: "100+", value: "100+" },
+];
+
 // Column definitions
 const columns: ColumnDef<Role>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      <input
+        type="checkbox"
+        checked={table.getIsAllPageRowsSelected()}
+        onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
+        className="translate-y-[2px]"
         aria-label="Select all"
       />
     ),
     cell: ({ row }) => (
-      <Checkbox
+      <input
+        type="checkbox"
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onChange={(e) => row.toggleSelected(!!e.target.checked)}
+        className="translate-y-[2px]"
         aria-label="Select row"
       />
     ),
@@ -139,12 +155,12 @@ const columns: ColumnDef<Role>[] = [
   },
   {
     accessorKey: "name",
-    header: "Role Name",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Role Name" />,
     cell: ({ row }) => <Badge variant="outline">{row.getValue("name")}</Badge>,
   },
   {
     accessorKey: "permissions",
-    header: "Permissions",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Permissions" />,
     cell: ({ row }) => {
       const permissions = row.original.permissions || [];
       return (
@@ -165,7 +181,7 @@ const columns: ColumnDef<Role>[] = [
   },
   {
     accessorKey: "users",
-    header: "Users",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Users" />,
     cell: ({ row }) => {
       const userCount = row.original.users || 0;
       return (
@@ -179,7 +195,7 @@ const columns: ColumnDef<Role>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Created",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
       return <span className="text-sm">{date.toLocaleDateString()}</span>;
@@ -224,37 +240,30 @@ export default function AdvancedTableDemoPage() {
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">Advanced Data Table Demo</h1>
         <p className="text-muted-foreground">
-          Demonstrating URL state management, keyboard shortcuts, and advanced filtering
+          Demonstrating sorting, filtering, pagination, row selection, and bulk actions
         </p>
       </div>
 
       {/* Feature Highlights */}
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-lg border p-4 space-y-2">
-          <h3 className="font-semibold">🔗 URL State</h3>
+          <h3 className="font-semibold">🎯 Column Sorting</h3>
           <p className="text-sm text-muted-foreground">
-            Try sorting, filtering, or paging - the URL updates automatically. Bookmark or share the
-            URL to preserve table state.
-          </p>
-          <Badge variant="outline" className="text-xs">
-            nuqs powered
-          </Badge>
-        </div>
-
-        <div className="rounded-lg border p-4 space-y-2">
-          <h3 className="font-semibold">⌨️ Keyboard Shortcuts</h3>
-          <p className="text-sm text-muted-foreground">
-            <strong>Ctrl+Shift+F</strong> to focus search
-            <br />
-            <strong>Ctrl+Shift+D</strong> to clear filters
+            Click column headers to sort ascending/descending. Multi-column sorting supported.
           </p>
         </div>
 
         <div className="rounded-lg border p-4 space-y-2">
-          <h3 className="font-semibold">🎯 Advanced Features</h3>
+          <h3 className="font-semibold">🔍 Faceted Filters</h3>
           <p className="text-sm text-muted-foreground">
-            Multi-column sorting (click headers), column visibility toggle, row selection with bulk
-            actions.
+            Filter by user count ranges, search by name, and toggle column visibility.
+          </p>
+        </div>
+
+        <div className="rounded-lg border p-4 space-y-2">
+          <h3 className="font-semibold">✅ Row Selection</h3>
+          <p className="text-sm text-muted-foreground">
+            Select individual rows or all rows. Bulk actions appear when rows are selected.
           </p>
         </div>
       </div>
@@ -262,20 +271,31 @@ export default function AdvancedTableDemoPage() {
       {/* The Advanced Table */}
       <div className="rounded-lg border p-6 bg-card">
         <h2 className="text-xl font-semibold mb-4">Roles Table</h2>
-        <AdvancedDataTable
+        <DataTable
           data={mockRoles}
           columns={columns}
-          searchPlaceholder="Search roles..."
-          searchableColumns={["name"]}
+          toolbar={(table) => (
+            <div className="flex items-center justify-between">
+              <Input
+                placeholder="Search roles..."
+                value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
+                className="max-w-sm"
+              />
+              <DataTableViewOptions table={table} />
+            </div>
+          )}
+          actionBar={(table) => (
+            <DataTableActionBar table={table}>
+              {(selectedRows) => (
+                <Button size="sm" variant="destructive">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete ({selectedRows.length})
+                </Button>
+              )}
+            </DataTableActionBar>
+          )}
         />
-      </div>
-
-      {/* Current URL Display */}
-      <div className="rounded-lg border p-4 bg-muted/50">
-        <h3 className="font-semibold text-sm mb-2">Current URL State:</h3>
-        <code className="text-xs break-all block">
-          {typeof window !== "undefined" ? window.location.search : ""}
-        </code>
       </div>
     </div>
   );
