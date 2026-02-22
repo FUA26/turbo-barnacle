@@ -118,10 +118,6 @@ test.describe("Authentication", () => {
     // Should redirect to login
     await page.waitForURL(/\/login/, { timeout: 3000 });
 
-    // Get the callback URL from URL params
-    const url = page.url();
-    const hasCallbackUrl = url.includes("callbackUrl");
-
     // Login
     await page.fill('input[name="email"]', "admin@naiera.com");
     await page.fill('input[name="password"]', "Admin123!");
