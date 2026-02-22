@@ -186,7 +186,7 @@ View test reports in:
 
 ### Admin User
 
-- Email: `admin@naiera.com`
+- Email: `admin@example.com`
 - Password: `Admin123!`
 
 This user is created by seed scripts and has all permissions.

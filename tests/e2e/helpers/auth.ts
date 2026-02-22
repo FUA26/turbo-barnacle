@@ -7,7 +7,7 @@
 import { Page } from "@playwright/test";
 
 const TEST_ADMIN = {
-  email: "admin@naiera.com",
+  email: "admin@example.com",
   password: "Admin123!",
 };
 
