@@ -31,17 +31,17 @@ export const metadata = {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100">
+    <div className="min-h-screen bg-white text-neutral-900">
       {/* Grain overlay for texture */}
       <div
-        className="fixed inset-0 pointer-events-none opacity-[0.02]"
+        className="fixed inset-0 pointer-events-none opacity-[0.03]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
         }}
       />
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-neutral-800 bg-neutral-950/80 backdrop-blur-sm">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-neutral-200 bg-white/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-orange-500 rounded" />
@@ -49,15 +49,15 @@ export default function LandingPage() {
             <span className="text-neutral-500 text-sm">next</span>
           </div>
           <div className="flex items-center gap-6 text-sm">
-            <a href="#features" className="hover:text-orange-400 transition-colors">
+            <a href="#features" className="hover:text-orange-500 transition-colors">
               Features
             </a>
-            <a href="#stack" className="hover:text-orange-400 transition-colors">
+            <a href="#stack" className="hover:text-orange-500 transition-colors">
               Stack
             </a>
             <Link
               href="/docs"
-              className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 rounded-lg transition-all hover:border-orange-500/50"
+              className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 rounded-lg transition-all hover:border-orange-500/50"
             >
               Get Started
             </Link>
@@ -66,13 +66,13 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-orange-50/50 to-white">
         {/* Animated background gradient */}
         <div
-          className="absolute inset-0 opacity-20"
+          className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(249, 115, 22, 0.15), transparent)",
+              "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(249, 115, 22, 0.08), transparent)",
             animation: "float 20s ease-in-out infinite",
           }}
         />
@@ -80,7 +80,7 @@ export default function LandingPage() {
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           {/* Badge */}
           <div
-            className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-full mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 rounded-full mb-8 shadow-sm"
             style={{ animation: "slideDown 0.8s ease-out" }}
           >
             <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
@@ -101,7 +101,7 @@ export default function LandingPage() {
 
           {/* Subheading */}
           <p
-            className="text-xl md:text-2xl text-neutral-400 max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="text-xl md:text-2xl text-neutral-600 max-w-2xl mx-auto mb-12 leading-relaxed"
             style={{ animation: "slideUp 1s ease-out 0.4s both" }}
           >
             Production-ready Next.js 16 boilerplate with authentication, RBAC, testing, and
@@ -115,7 +115,7 @@ export default function LandingPage() {
           >
             <Link
               href="/docs"
-              className="group px-8 py-4 bg-orange-500 hover:bg-orange-400 text-neutral-950 font-semibold rounded-lg transition-all flex items-center gap-2 hover:gap-3 hover:scale-105"
+              className="group px-8 py-4 bg-orange-500 hover:bg-orange-400 text-white font-semibold rounded-lg transition-all flex items-center gap-2 hover:gap-3 hover:scale-105 shadow-sm"
             >
               Get Started
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -124,7 +124,7 @@ export default function LandingPage() {
               href="https://github.com/your-repo/naiera-next"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 hover:border-neutral-600 rounded-lg transition-all flex items-center gap-2"
+              className="px-8 py-4 bg-white hover:bg-neutral-50 border border-neutral-300 hover:border-neutral-400 rounded-lg transition-all flex items-center gap-2 shadow-sm"
             >
               <Code2 className="w-5 h-5" />
               View Source
@@ -138,15 +138,15 @@ export default function LandingPage() {
           >
             <div className="text-center">
               <div className="text-4xl font-bold text-orange-500 mb-1">16</div>
-              <div className="text-sm text-neutral-500">Next.js Version</div>
+              <div className="text-sm text-neutral-600">Next.js Version</div>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-orange-500 mb-1">10+</div>
-              <div className="text-sm text-neutral-500">Features Included</div>
+              <div className="text-sm text-neutral-600">Features Included</div>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-orange-500 mb-1">100%</div>
-              <div className="text-sm text-neutral-500">TypeScript</div>
+              <div className="text-sm text-neutral-600">TypeScript</div>
             </div>
           </div>
         </div>
@@ -162,7 +162,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-32 px-6">
+      <section id="features" className="py-32 px-6 bg-neutral-50">
         <div className="max-w-7xl mx-auto">
           {/* Section header */}
           <div className="text-center mb-20">
@@ -173,7 +173,7 @@ export default function LandingPage() {
               Everything you need to ship
               <span className="text-orange-500"> fast</span>
             </h2>
-            <p className="text-xl text-neutral-400">
+            <p className="text-xl text-neutral-600">
               Enterprise-grade features out of the box. No setup required.
             </p>
           </div>
@@ -183,21 +183,21 @@ export default function LandingPage() {
             {features.map((feature, index) => (
               <div
                 key={feature.title}
-                className="group p-8 bg-neutral-900 border border-neutral-800 rounded-2xl hover:border-orange-500/30 transition-all duration-500"
+                className="group p-8 bg-white border border-neutral-200 rounded-2xl hover:border-orange-500/30 transition-all duration-500 shadow-sm hover:shadow-md"
                 style={{
                   animation: `slideUp 0.8s ease-out ${0.1 * index}s both`,
                 }}
               >
-                <div className="mb-6 p-3 bg-neutral-800 rounded-xl w-fit group-hover:bg-orange-500/10 transition-colors">
+                <div className="mb-6 p-3 bg-neutral-100 rounded-xl w-fit group-hover:bg-orange-50 transition-colors">
                   <IconComponent icon={feature.icon} className="w-8 h-8 text-orange-500" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                <p className="text-neutral-400 leading-relaxed mb-4">{feature.description}</p>
+                <p className="text-neutral-600 leading-relaxed mb-4">{feature.description}</p>
                 <ul className="space-y-2">
                   {feature.highlights.map((highlight) => (
                     <li key={highlight} className="flex items-start gap-2 text-sm">
                       <Check className="w-4 h-4 text-orange-500 shrink-0 mt-0.5" />
-                      <span className="text-neutral-300">{highlight}</span>
+                      <span className="text-neutral-700">{highlight}</span>
                     </li>
                   ))}
                 </ul>
@@ -208,7 +208,7 @@ export default function LandingPage() {
       </section>
 
       {/* Stack Section */}
-      <section id="stack" className="py-32 px-6 bg-neutral-900/50">
+      <section id="stack" className="py-32 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
             <h2
@@ -218,7 +218,7 @@ export default function LandingPage() {
               Built with modern
               <span className="text-orange-500"> technologies</span>
             </h2>
-            <p className="text-xl text-neutral-400">
+            <p className="text-xl text-neutral-600">
               Latest versions, best practices, future-ready architecture.
             </p>
           </div>
@@ -228,7 +228,7 @@ export default function LandingPage() {
             {stack.map((item, index) => (
               <div
                 key={item.name}
-                className="p-6 bg-neutral-800 border border-neutral-700 rounded-xl hover:border-orange-500/30 transition-all group"
+                className="p-6 bg-neutral-50 border border-neutral-200 rounded-xl hover:border-orange-500/30 transition-all group"
                 style={{
                   animation: `slideUp 0.6s ease-out ${0.05 * index}s both`,
                 }}
@@ -237,13 +237,13 @@ export default function LandingPage() {
                   <IconComponent icon={item.icon} className="w-6 h-6 text-orange-500" />
                   <h3 className="font-semibold">{item.name}</h3>
                 </div>
-                <p className="text-sm text-neutral-400">{item.version}</p>
+                <p className="text-sm text-neutral-600">{item.version}</p>
               </div>
             ))}
           </div>
 
           {/* Code snippet */}
-          <div className="mt-16 p-6 bg-neutral-950 border border-neutral-800 rounded-xl overflow-hidden">
+          <div className="mt-16 p-6 bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden shadow-lg">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Terminal className="w-5 h-5 text-orange-500" />
@@ -273,7 +273,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 px-6">
+      <section className="py-32 px-6 bg-gradient-to-b from-white to-orange-50/50">
         <div className="max-w-4xl mx-auto text-center">
           <h2
             className="text-4xl md:text-6xl font-bold mb-6"
@@ -282,13 +282,13 @@ export default function LandingPage() {
             Ready to build something
             <span className="text-orange-500"> amazing?</span>
           </h2>
-          <p className="text-xl text-neutral-400 mb-12">
+          <p className="text-xl text-neutral-600 mb-12">
             Get started in seconds with our production-ready boilerplate.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/docs"
-              className="px-8 py-4 bg-orange-500 hover:bg-orange-400 text-neutral-950 font-semibold rounded-lg transition-all flex items-center gap-2 hover:scale-105"
+              className="px-8 py-4 bg-orange-500 hover:bg-orange-400 text-white font-semibold rounded-lg transition-all flex items-center gap-2 hover:scale-105 shadow-sm"
             >
               <Rocket className="w-5 h-5" />
               Start Building
@@ -297,7 +297,7 @@ export default function LandingPage() {
               href="https://github.com/your-repo/naiera-next"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 hover:border-neutral-600 rounded-lg transition-all"
+              className="px-8 py-4 bg-white hover:bg-neutral-50 border border-neutral-300 hover:border-neutral-400 rounded-lg transition-all shadow-sm"
             >
               Star on GitHub ⭐
             </a>
@@ -306,13 +306,13 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-800 py-12 px-6">
+      <footer className="border-t border-neutral-200 py-12 px-6 bg-white">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-orange-500 rounded" />
             <span className="font-semibold">naiera next</span>
           </div>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-neutral-600">
             MIT License • Built with Next.js 16 • {new Date().getFullYear()}
           </p>
         </div>
