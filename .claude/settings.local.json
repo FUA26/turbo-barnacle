@@ -85,7 +85,12 @@
       "Bash(git log:*)",
       "Bash(sudo apt-get:*)",
       "Bash(sudo apt-get install:*)",
-      "Bash(ldd:*)"
+      "Bash(ldd:*)",
+      "Bash(do if [ ! -f \"components/ui/$file.tsx\" ])",
+      "Bash(then echo \"$file.tsx - MISSING\")",
+      "Bash(fi:*)",
+      "Bash(ldconfig:*)",
+      "Bash(apt:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

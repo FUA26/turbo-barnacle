@@ -6,10 +6,11 @@ import { User, Users } from "lucide-react";
 import {
   Bar,
   BarChart,
-  DonutChart,
-  DonutChartCell,
+  Cell,
   Label,
   Legend,
+  Pie,
+  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -78,19 +79,30 @@ export function UserStatsSection({ dateRange = "30" }: { dateRange?: string }) {
         <ChartWrapper title="User Distribution by Role" icon={User} accentColor="green">
           <div className="flex items-center justify-center">
             <div style={{ position: "relative", width: 300, height: 300 }}>
-              <DonutChart width={300} height={300} data={roleChartData}>
-                {roleChartData.map((entry, index) => (
-                  <DonutChartCell
-                    key={`cell-${index}`}
-                    fill={ROLE_COLORS[entry.name] || COLORS[index % COLORS.length]}
+              <PieChart width={300} height={300}>
+                <Pie
+                  data={roleChartData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  innerRadius={70}
+                  paddingAngle={2}
+                >
+                  {roleChartData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={ROLE_COLORS[entry.name] || COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                  <Label
+                    value={totalUsers.toString()}
+                    position="center"
+                    className="text-3xl font-bold fill-gray-900"
                   />
-                ))}
-                <Label
-                  value={totalUsers.toString()}
-                  position="center"
-                  className="text-3xl font-bold fill-gray-900"
-                />
-              </DonutChart>
+                </Pie>
+              </PieChart>
             </div>
           </div>
           <div className="flex flex-wrap justify-center gap-4 mt-4">

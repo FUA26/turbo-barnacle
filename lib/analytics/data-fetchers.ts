@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth/config";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/db/prisma";
 
 // Get total users count
 export async function getTotalUsers() {

@@ -1,10 +1,10 @@
 "use client";
 
-import { getStorageUsage, getTotalUsers, getUsersByRole } from "@/lib/analytics/data-fetchers";
+import { getStorageUsage, getTotalUsers } from "@/lib/analytics/data-fetchers";
 import { generateMockApiRequests, getActiveSessions } from "@/lib/analytics/mock-data";
 import { useQuery } from "@tanstack/react-query";
 import { Activity, Database, Users, Zap } from "lucide-react";
-import { Area, AreaChart, Cell, DonutChart } from "recharts";
+import { Area, AreaChart, Cell, Pie, PieChart } from "recharts";
 import { ChartWrapper } from "./chart-wrapper";
 
 const COLORS = ["#3b82f6", "#22c55e", "#f97316", "#a855f7", "#ec4899", "#ef4444"];
@@ -14,11 +14,6 @@ export function SummaryCards() {
   const { data: totalUsers } = useQuery({
     queryKey: ["totalUsers"],
     queryFn: getTotalUsers,
-  });
-
-  const { data: roleData } = useQuery({
-    queryKey: ["usersByRole"],
-    queryFn: getUsersByRole,
   });
 
   const { data: storageData } = useQuery({
@@ -119,11 +114,22 @@ export function SummaryCards() {
               </p>
               <p className="text-sm text-muted-foreground">{storageData.totalFiles} files</p>
               <div className="h-12 flex items-center justify-center">
-                <DonutChart width={100} height={100} data={storageChartData} className="text-xs">
-                  {storageChartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </DonutChart>
+                <PieChart width={100} height={100}>
+                  <Pie
+                    data={storageChartData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={40}
+                    innerRadius={25}
+                    paddingAngle={2}
+                  >
+                    {storageChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                </PieChart>
               </div>
             </>
           )}

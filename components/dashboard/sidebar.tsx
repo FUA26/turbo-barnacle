@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { usePermissions } from "@/lib/rbac-client/provider";
 import {
-  BarChart03Icon,
+  BarChartIcon,
   LayoutDashboard,
   SecurityIcon,
   Settings01Icon,
@@ -28,7 +28,7 @@ import { usePathname } from "next/navigation";
 const navItems = [
   { heading: "Overview" },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, permission: null },
-  { href: "/analytics", label: "Analytics", icon: BarChart03Icon, permission: null },
+  { href: "/analytics", label: "Analytics", icon: BarChartIcon, permission: null },
   { heading: "Management" },
   {
     href: "/manage/users",

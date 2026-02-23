@@ -1,4 +1,5 @@
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { Providers } from "@/components/shared/providers";
 import { auth } from "@/lib/auth/config";
 import { PermissionProvider } from "@/lib/rbac-client/provider";
 import { loadUserPermissions } from "@/lib/rbac-server/loader";
@@ -34,7 +35,9 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   return (
     <PermissionProvider initialPermissions={permissions}>
-      <DashboardLayout user={user ?? session.user}>{children}</DashboardLayout>
+      <Providers>
+        <DashboardLayout user={user ?? session.user}>{children}</DashboardLayout>
+      </Providers>
     </PermissionProvider>
   );
 }
