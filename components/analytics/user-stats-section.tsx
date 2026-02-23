@@ -57,8 +57,8 @@ export function UserStatsSection({ dateRange = "30" }: { dateRange?: string }) {
   const totalUsers = roleChartData.reduce((sum, d) => sum + d.value, 0);
 
   return (
-    <section className="mb-8">
-      <h2 className="text-2xl font-bold mb-4">User Statistics</h2>
+    <section className="space-y-4">
+      <h2 className="text-2xl font-bold">User Statistics</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* User Growth by Role - Stacked Bar Chart */}
         <ChartWrapper title="User Growth by Role" icon={Users} accentColor="blue">

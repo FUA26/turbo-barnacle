@@ -47,8 +47,8 @@ export function SystemStatsSection() {
     cacheData.hitRate >= 80 ? "#22c55e" : cacheData.hitRate >= 50 ? "#eab308" : "#ef4444";
 
   return (
-    <section className="mb-8">
-      <h2 className="text-2xl font-bold mb-4">System Statistics</h2>
+    <section className="space-y-4">
+      <h2 className="text-2xl font-bold">System Statistics</h2>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* API Request Volume - Area Chart */}
         <ChartWrapper title="API Request Volume" icon={Activity} accentColor="pink">

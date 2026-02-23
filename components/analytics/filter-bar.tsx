@@ -26,7 +26,7 @@ export function FilterBar({ onDateRangeChange, onRefresh, isRefreshing = false }
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-4 mb-8 p-4 bg-white rounded-lg border border-gray-200">
+    <div className="flex flex-wrap items-center gap-4 p-4 bg-white rounded-lg border border-gray-200">
       <div className="flex items-center gap-2">
         <Calendar className="w-4 h-4 text-gray-500" />
         <Select value={dateRange} onValueChange={handleDateRangeChange}>

@@ -37,8 +37,8 @@ export function ActivitySection({ dateRange = "30" }: { dateRange?: string }) {
   };
 
   return (
-    <section className="mb-8">
-      <h2 className="text-2xl font-bold mb-4">Activity Logs</h2>
+    <section className="space-y-4">
+      <h2 className="text-2xl font-bold">Activity Logs</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Login Activity - Line Chart */}
         <ChartWrapper title="Login Activity Over Time" icon={Activity} accentColor="green">

@@ -10,14 +10,14 @@ interface ChartWrapperProps {
 }
 
 const accentColors = {
-  blue: "border-blue-500 bg-blue-50",
-  green: "border-green-500 bg-green-50",
-  orange: "border-orange-500 bg-orange-50",
-  purple: "border-purple-500 bg-purple-50",
-  pink: "border-pink-500 bg-pink-50",
-  red: "border-red-500 bg-red-50",
-  cyan: "border-cyan-500 bg-cyan-50",
-  yellow: "border-yellow-500 bg-yellow-50",
+  blue: "border-l-blue-500",
+  green: "border-l-green-500",
+  orange: "border-l-orange-500",
+  purple: "border-l-purple-500",
+  pink: "border-l-pink-500",
+  red: "border-l-red-500",
+  cyan: "border-l-cyan-500",
+  yellow: "border-l-yellow-500",
 };
 
 const iconColors = {
@@ -41,7 +41,7 @@ export function ChartWrapper({
   return (
     <div
       className={cn(
-        "border-l-4 rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow",
+        "rounded-lg border p-6 bg-card shadow-sm hover:shadow-md transition-shadow border-l-4",
         accentColors[accentColor],
         className
       )}

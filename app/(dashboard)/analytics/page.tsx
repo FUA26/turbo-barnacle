@@ -26,18 +26,21 @@ export default function AnalyticsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Analytics Dashboard</h1>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-3xl font-bold">Analytics Dashboard</h2>
+        <p className="text-muted-foreground">Monitor your system performance</p>
+      </div>
 
-        <SummaryCards />
+      <SummaryCards />
 
-        <FilterBar
-          onDateRangeChange={handleDateRangeChange}
-          onRefresh={handleRefresh}
-          isRefreshing={isRefreshing}
-        />
+      <FilterBar
+        onDateRangeChange={handleDateRangeChange}
+        onRefresh={handleRefresh}
+        isRefreshing={isRefreshing}
+      />
 
+      <div className="space-y-6">
         <UserStatsSection dateRange={dateRange} />
 
         <SystemStatsSection />
