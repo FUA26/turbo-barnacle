@@ -18,6 +18,8 @@
     "format:check": "prettier --check .",
     "prepare": "lefthook install",
     "commit": "cz",
+    "release": "semantic-release",
+    "release:dry-run": "semantic-release --dry-run",
     "knip": "knip",
     "knip:fix": "knip --fix",
     "prisma:studio": "prisma studio",
