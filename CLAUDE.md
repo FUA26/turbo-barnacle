@@ -518,6 +518,29 @@ This project uses lefthook for Git hooks:
 - Unused variables: prefix with `_` (e.g., `_req`) or remove
 - Bypass hooks (not recommended): `git commit --no-verify` or `git push --no-verify`
 
+## Semantic Release
+
+Automated versioning and release management using semantic-release:
+
+- **Configuration:** `.releaserc.json` - Plugin configuration and branch settings
+- **Release trigger:** Automatically triggered on push to `master` branch
+- **Version rules:**
+  - `feat:` → minor version bump (0.1.0 → 0.2.0)
+  - `fix:` → patch version bump (0.1.0 → 0.1.1)
+  - `feat!:` or `BREAKING CHANGE:` → major version bump (0.1.0 → 1.0.0)
+  - `chore:`, `docs:`, `test:` → no release
+- **Changelog:** Automatically generated in `CHANGELOG.md`
+- **GitHub releases:** Auto-created with release notes
+- **Local testing:** Run `npm run release:dry-run` to test without creating releases
+
+**Development workflow:**
+
+1. Create feature branch: `git checkout -b feature/my-feature`
+2. Make commits with conventional format: `feat: add new feature`
+3. Push and create PR to master
+4. After merge, semantic-release automatically creates release
+5. No manual version bumping needed!
+
 ## Additional Documentation
 
 - **KNOWN_ISSUES.md** - Runtime issues and troubleshooting
