@@ -5,6 +5,7 @@
  * Requires: ADMIN_USERS_MANAGE permission
  */
 
+import { UsersTableSkeleton } from "@/components/admin/users-table-skeleton";
 import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
 import { Suspense } from "react";
 import { UsersTableWithActions } from "./users-table-actions";
@@ -17,9 +18,7 @@ function AdminUsersContent() {
         <p className="text-muted-foreground">Manage user accounts, roles, and permissions</p>
       </div>
 
-      <Suspense
-        fallback={<div className="rounded-lg border p-6 text-center">Loading users...</div>}
-      >
+      <Suspense fallback={<UsersTableSkeleton />}>
         <UsersTableWithActions />
       </Suspense>
     </div>

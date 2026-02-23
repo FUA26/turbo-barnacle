@@ -59,7 +59,7 @@ interface RolesTanStackTableProps {
   onRefresh: () => void;
   onEdit: (roleId: string) => void;
   onClone: (roleId: string) => void;
-  onDelete: (roleId: string) => void;
+  onDelete: (roleId: string, roleName: string, userCount: number) => void;
   onCreate: () => void;
 }
 
@@ -168,7 +168,7 @@ export function RolesTanStackTable({
                 Clone
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => onDelete(role.id)}
+                onClick={() => onDelete(role.id, role.name, role._count?.users || 0)}
                 className="text-destructive"
                 disabled={userCount > 0}
               >

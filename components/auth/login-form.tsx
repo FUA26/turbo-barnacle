@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { loginSchema } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -74,6 +75,15 @@ export function LoginForm() {
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Signing in..." : "Sign In"}
       </Button>
+
+      <div className="flex items-center justify-between text-sm">
+        <Link href="/forgot-password" className="text-primary hover:underline">
+          Forgot your password?
+        </Link>
+        <Link href="/register" className="text-primary hover:underline">
+          Don&apos;t have an account? Sign up
+        </Link>
+      </div>
     </form>
   );
 }

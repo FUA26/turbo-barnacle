@@ -79,31 +79,32 @@ export const PUT = protectApiRoute({
         permission,
         message: "Permission updated successfully",
       });
-    } catch (error: any) {
+    } catch (error) {
       // Handle validation errors
-      if (error.name === "ZodError") {
+      if (error && typeof error === "object" && "name" in error && error.name === "ZodError") {
         return NextResponse.json(
           {
             error: "Validation Error",
-            details: error.errors,
+            details: "errors" in error ? error.errors : undefined,
           },
           { status: 400 }
         );
       }
 
+      const message = error instanceof Error ? error.message : "";
       // Handle not found
-      if (error.message?.includes("not found")) {
+      if (message.includes("not found")) {
         return NextResponse.json(
           {
             error: "Not Found",
-            message: error.message,
+            message,
           },
           { status: 404 }
         );
       }
 
       // Handle unique constraint violation
-      if (error.code === "P2002") {
+      if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
         return NextResponse.json(
           {
             error: "Conflict",
@@ -117,7 +118,7 @@ export const PUT = protectApiRoute({
       return NextResponse.json(
         {
           error: "Server Error",
-          message: error.message || "Failed to update permission",
+          message: message || "Failed to update permission",
         },
         { status: 500 }
       );
@@ -144,24 +145,25 @@ export const DELETE = protectApiRoute({
         permission,
         message: "Permission deleted successfully",
       });
-    } catch (error: any) {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "";
       // Handle not found
-      if (error.message?.includes("not found")) {
+      if (message.includes("not found")) {
         return NextResponse.json(
           {
             error: "Not Found",
-            message: error.message,
+            message,
           },
           { status: 404 }
         );
       }
 
       // Handle permission in use
-      if (error.message?.includes("assigned to")) {
+      if (message.includes("assigned to")) {
         return NextResponse.json(
           {
             error: "Conflict",
-            message: error.message,
+            message,
           },
           { status: 409 }
         );
@@ -171,7 +173,7 @@ export const DELETE = protectApiRoute({
       return NextResponse.json(
         {
           error: "Server Error",
-          message: error.message || "Failed to delete permission",
+          message: message || "Failed to delete permission",
         },
         { status: 500 }
       );

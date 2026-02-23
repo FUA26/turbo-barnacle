@@ -6,15 +6,14 @@
  * Requires: ADMIN_PERMISSIONS_MANAGE permission
  */
 
+import { PermissionsTableSkeleton } from "@/components/admin/permissions-table-skeleton";
 import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
 import { Suspense } from "react";
 import { PermissionsTableWithActions } from "./permissions-table-actions";
 
 function PermissionsContent() {
   return (
-    <Suspense
-      fallback={<div className="rounded-lg border p-6 text-center">Loading permissions...</div>}
-    >
+    <Suspense fallback={<PermissionsTableSkeleton />}>
       <PermissionsTableWithActions />
     </Suspense>
   );

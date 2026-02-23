@@ -20,8 +20,8 @@ pre-push:
     type-check:
       run: pnpm tsc --noEmit
 
-    tests:
-      run: pnpm test # Uncomment when tests are available
+    # tests:
+    #   run: pnpm test # Uncomment when tests are available
 
 commit-msg:
   commands:

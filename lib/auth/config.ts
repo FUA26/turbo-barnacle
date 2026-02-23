@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/db/prisma";
-import { Permission } from "@/lib/rbac/types";
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -46,16 +45,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!isValid) return null;
 
-        // Extract permission names from junction table
-        const permissions = user.role?.permissions.map((rp) => rp.permission.name) as Permission[];
-
         return {
           id: user.id,
           email: user.email,
           name: user.name,
           roleId: user.roleId,
-          roleName: user.role?.name,
-          permissions,
+          role: user.role
+            ? {
+                id: user.role.id,
+                name: user.role.name,
+                permissions: user.role.permissions.map((rp) => ({
+                  permission: {
+                    name: rp.permission.name,
+                  },
+                })),
+              }
+            : undefined,
         };
       },
     }),
@@ -65,16 +70,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id;
         token.roleId = user.roleId;
-        token.roleName = user.roleName;
-        token.permissions = user.permissions;
+        token.role = user.role;
+        // Extract permissions as flat array for easier access
+        if (user.role) {
+          token.permissions = user.role.permissions.map((rp) => rp.permission.name);
+        }
       }
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id as string;
-      session.user.roleId = token.roleId as string;
-      session.user.roleName = token.roleName as string | undefined;
-      session.user.permissions = token.permissions as Permission[] | undefined;
+      if (token.id) {
+        session.user.id = token.id as string;
+        session.user.roleId = token.roleId as string;
+      }
+      if (token.role) {
+        session.user.role = token.role as {
+          id: string;
+          name: string;
+          permissions: Array<{
+            permission: {
+              name: string;
+            };
+          }>;
+        };
+      }
+      if (token.permissions) {
+        session.user.permissions = token.permissions as string[];
+      }
       return session;
     },
   },

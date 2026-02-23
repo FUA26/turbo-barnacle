@@ -8,6 +8,7 @@
  */
 
 import { PermissionsDataTable } from "@/components/admin/permissions-data-table";
+import { PermissionsTableSkeleton } from "@/components/admin/permissions-table-skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -121,11 +122,7 @@ export function PermissionsTableWithActions() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-sm text-muted-foreground">Loading permissions...</div>
-      </div>
-    );
+    return <PermissionsTableSkeleton />;
   }
 
   return (

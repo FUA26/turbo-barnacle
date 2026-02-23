@@ -21,8 +21,8 @@ import { NextResponse } from "next/server";
 export const GET = protectApiRoute({
   permissions: ["USER_READ_ANY"] as Permission[],
   handler: async (req, { user }, ...args) => {
-    const params = args[0] as { params: { id: string } };
-    const userId = params.params.id;
+    const params = await (args[0] as { params: Promise<{ id: string }> }).params;
+    const userId = params.id;
 
     const userDetail = await prisma.user.findUnique({
       where: { id: userId },
@@ -57,8 +57,8 @@ export const GET = protectApiRoute({
 export const PUT = protectApiRoute({
   permissions: ["USER_UPDATE_ANY"] as Permission[],
   handler: async (req, { user }, ...args) => {
-    const params = args[0] as { params: { id: string } };
-    const userId = params.params.id;
+    const params = await (args[0] as { params: Promise<{ id: string }> }).params;
+    const userId = params.id;
     const body = await req.json();
 
     // Validate input
@@ -130,8 +130,8 @@ export const PUT = protectApiRoute({
 export const DELETE = protectApiRoute({
   permissions: ["USER_DELETE_ANY"] as Permission[],
   handler: async (req, { user }, ...args) => {
-    const params = args[0] as { params: { id: string } };
-    const userId = params.params.id;
+    const params = await (args[0] as { params: Promise<{ id: string }> }).params;
+    const userId = params.id;
 
     // Prevent deleting yourself
     if (userId === user.id) {

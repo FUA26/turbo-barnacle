@@ -22,18 +22,21 @@ export default auth((req) => {
   const pathname = req.nextUrl.pathname;
   const isOnDashboard = pathname.startsWith("/dashboard");
   const isOnManageRoute = MANAGE_ROUTES.some((route) => pathname.startsWith(route));
-  const isOnAuthPage = pathname.startsWith("/login") || pathname.startsWith("/register");
+  const isOnAuthPage =
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/register") ||
+    pathname.startsWith("/unauthorized");
 
   // Redirect unauthenticated users trying to access protected routes
   if (isOnDashboard && !isLoggedIn) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // Check manage routes
+  // Check manage routes - requires ADMIN role
   if (isOnManageRoute && isLoggedIn) {
-    const userRole = req.auth?.user?.roleName;
+    const userRole = req.auth?.user?.role?.name;
 
-    if (userRole !== "ADMIN") {
+    if (!userRole || userRole !== "ADMIN") {
       // User is not admin, redirect to unauthorized page
       return NextResponse.redirect(new URL("/unauthorized", req.url));
     }

@@ -14,10 +14,11 @@ import {
 } from "@/components/ui/sidebar";
 import { usePermissions } from "@/lib/rbac-client/provider";
 import {
+  BarChartIcon,
   LayoutDashboard,
   SecurityIcon,
-  Settings,
   Settings01Icon,
+  Settings02Icon,
   Users,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -27,6 +28,7 @@ import { usePathname } from "next/navigation";
 const navItems = [
   { heading: "Overview" },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, permission: null },
+  { href: "/analytics", label: "Analytics", icon: BarChartIcon, permission: null },
   { heading: "Management" },
   {
     href: "/manage/users",
@@ -46,8 +48,12 @@ const navItems = [
     icon: Settings01Icon,
     permission: "ADMIN_PERMISSIONS_MANAGE",
   },
-  { heading: "Account" },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings, permission: null },
+  {
+    href: "/manage/system-settings",
+    label: "System Settings",
+    icon: Settings02Icon,
+    permission: "ADMIN_SYSTEM_SETTINGS_MANAGE",
+  },
 ];
 
 export function AppSidebar() {

@@ -19,6 +19,7 @@ import {
 import type { CreateUserInput, UpdateUserInput } from "@/lib/validations/user";
 import { createUserSchema, updateUserSchema } from "@/lib/validations/user";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface UserFormProps {
@@ -53,6 +54,13 @@ export function UserForm({
       roleId: "",
     },
   });
+
+  // Reset form when initialData changes (e.g., when switching to edit mode)
+  useEffect(() => {
+    if (initialData) {
+      form.reset(initialData);
+    }
+  }, [initialData, form]);
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -109,7 +117,7 @@ export function UserForm({
         <FieldContent>
           <Select
             onValueChange={(value) => form.setValue("roleId", value)}
-            defaultValue={initialData?.roleId}
+            value={form.watch("roleId")}
             disabled={isLoading}
           >
             <SelectTrigger>

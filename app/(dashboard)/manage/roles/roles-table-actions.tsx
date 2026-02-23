@@ -8,6 +8,7 @@
 
 import { DeleteRoleConfirmDialog } from "@/components/admin/delete-role-confirm-dialog";
 import { RoleDialog } from "@/components/admin/role-dialog";
+import { RolesTableSkeleton } from "@/components/admin/roles-table-skeleton";
 import { RolesTanStackTable } from "@/components/admin/roles-tanstack-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
@@ -84,9 +85,16 @@ export function RolesTableWithActions() {
     open: false,
     roleId: "",
   });
-  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; roleId: string }>({
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    roleId: string;
+    roleName: string;
+    userCount: number;
+  }>({
     open: false,
     roleId: "",
+    roleName: "",
+    userCount: 0,
   });
 
   const fetchRoles = async () => {
@@ -133,16 +141,12 @@ export function RolesTableWithActions() {
     setCloneDialog({ open: true, roleId });
   };
 
-  const handleDelete = (roleId: string) => {
-    setDeleteDialog({ open: true, roleId });
+  const handleDelete = (roleId: string, roleName: string, userCount: number) => {
+    setDeleteDialog({ open: true, roleId, roleName, userCount });
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-sm text-muted-foreground">Loading roles...</div>
-      </div>
-    );
+    return <RolesTableSkeleton />;
   }
 
   return (
@@ -195,8 +199,17 @@ export function RolesTableWithActions() {
       {/* Delete Dialog */}
       <DeleteRoleConfirmDialog
         open={deleteDialog.open}
-        onOpenChange={(open) => setDeleteDialog({ open, roleId: open ? deleteDialog.roleId : "" })}
+        onOpenChange={(open) =>
+          setDeleteDialog({
+            open,
+            roleId: open ? deleteDialog.roleId : "",
+            roleName: open ? deleteDialog.roleName : "",
+            userCount: open ? deleteDialog.userCount : 0,
+          })
+        }
         roleId={deleteDialog.roleId}
+        roleName={deleteDialog.roleName}
+        userCount={deleteDialog.userCount}
         onSuccess={handleRefresh}
       />
     </div>

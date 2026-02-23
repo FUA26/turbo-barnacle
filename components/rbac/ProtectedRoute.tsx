@@ -65,7 +65,9 @@ export async function ProtectedRoute({
 
   // Handle both boolean and PermissionCheckResult return types
   const hasAccess =
-    typeof permissionCheck === "boolean" ? permissionCheck : permissionCheck.allowed;
+    typeof permissionCheck === "boolean"
+      ? permissionCheck
+      : (permissionCheck as { allowed: boolean }).allowed;
 
   if (!hasAccess) {
     if (fallback) {

@@ -12,6 +12,7 @@ import type {
   PermissionRecordWithUsage,
   UpdatePermissionInput,
 } from "@/lib/rbac/types";
+import { Prisma } from "@prisma/client";
 import { invalidateAllPermissions } from "./loader";
 
 /**
@@ -53,7 +54,7 @@ export async function getAllPermissions(filters?: {
     : {};
 
   const permissions = await prisma.permission.findMany({
-    where,
+    where: where as Prisma.PermissionWhereInput,
     include,
     orderBy: [{ category: "asc" }, { name: "asc" }],
   });

@@ -29,6 +29,15 @@ export type Permission =
   | "CONTENT_DELETE_OWN"
   | "CONTENT_DELETE_ANY"
   | "CONTENT_PUBLISH"
+  // File Management
+  | "FILE_UPLOAD_OWN"
+  | "FILE_UPLOAD_ANY"
+  | "FILE_READ_OWN"
+  | "FILE_READ_ANY"
+  | "FILE_DELETE_OWN"
+  | "FILE_DELETE_ANY"
+  | "FILE_MANAGE_ORPHANS"
+  | "FILE_ADMIN"
   // Settings
   | "SETTINGS_READ"
   | "SETTINGS_UPDATE"
@@ -40,6 +49,7 @@ export type Permission =
   | "ADMIN_USERS_MANAGE"
   | "ADMIN_ROLES_MANAGE"
   | "ADMIN_PERMISSIONS_MANAGE"
+  | "ADMIN_SYSTEM_SETTINGS_MANAGE"
   // Allow dynamic/custom permissions (any string)
   | string;
 
