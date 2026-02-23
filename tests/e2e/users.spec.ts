@@ -177,9 +177,9 @@ test.describe("User Management", () => {
           await page.click('button:has-text("Delete User")');
 
           // Should get error about deleting own account
-          await expect(
-            page.locator("text=cannot delete your own account", { exact: false })
-          ).toBeVisible({ timeout: 3000 });
+          await expect(page.locator("text=cannot delete your own account")).toBeVisible({
+            timeout: 3000,
+          });
         }
 
         break;

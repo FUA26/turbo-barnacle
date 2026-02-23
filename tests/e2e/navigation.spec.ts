@@ -204,11 +204,11 @@ test.describe("Navigation and Routing", () => {
 
     // Check for 404 message or error page
     const has404Message = await page
-      .locator("text=404", { exact: false })
+      .locator("text=404")
       .isVisible()
       .catch(() => false);
     const hasNotFoundMessage = await page
-      .locator("text=not found", { exact: false })
+      .locator("text=not found")
       .isVisible()
       .catch(() => false);
 

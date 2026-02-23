@@ -48,7 +48,7 @@ test.describe("Authentication", () => {
     await page.click('button[type="submit"]');
 
     // Should show error message
-    await expect(page.locator("text=Invalid credentials", { exact: false })).toBeVisible({
+    await expect(page.locator("text=Invalid credentials")).toBeVisible({
       timeout: 3000,
     });
 

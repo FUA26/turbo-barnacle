@@ -135,7 +135,7 @@ test.describe("Permission Management", () => {
         await page.waitForTimeout(2000);
 
         // Check for error message or success
-        const errorMsg = page.locator("text=assigned to.*roles", { exact: false });
+        const errorMsg = page.locator("text=assigned to.*roles");
         const successMsg = page.locator("text=Permission deleted successfully");
 
         const hasErrorOrSuccess =
@@ -187,8 +187,8 @@ test.describe("Permission Management", () => {
     await page.waitForTimeout(2000);
 
     // Verify error message about duplicate
-    const errorMsg = page.locator("text=already exists", { exact: false });
-    const conflictMsg = page.locator("text=Conflict", { exact: false });
+    const errorMsg = page.locator("text=already exists");
+    const conflictMsg = page.locator("text=Conflict");
 
     const hasError =
       (await errorMsg.isVisible({ timeout: 3000 }).catch(() => false)) ||

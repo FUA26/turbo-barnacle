@@ -232,8 +232,8 @@ test.describe("Role Management", () => {
       // Verify error message about duplicate or conflict
       await page.waitForTimeout(2000);
 
-      const errorMsg = page.locator("text=already exists", { exact: false });
-      const conflictMsg = page.locator("text=Conflict", { exact: false });
+      const errorMsg = page.locator("text=already exists");
+      const conflictMsg = page.locator("text=Conflict");
 
       const hasError =
         (await errorMsg.isVisible({ timeout: 3000 }).catch(() => false)) ||
